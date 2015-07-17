@@ -78,21 +78,21 @@ extension Optional {
 class Ex01_2_OptionalMapExamples: XCTestCase {
     func testMapEmpty() {
         let a : Int? = nil
-        let result = a.map(plus1)
+        let result = a.myMap(plus1)
         
         XCTAssert(result == nil, toString(result))
     }
     
     func testMapPlus1() {
         let a = Optional.Some(41)
-        let result = a.map(plus1)
+        let result = a.myMap(plus1)
         
         XCTAssert(result == .Some(42), toString(result))
     }
     
     func testExampleOfFirstLaw() {
-        let empty : [Int] = []
-        let x = [1,2,3]
+        let empty : Int? = .None
+        let x : Int? = .Some(42)
         
         assertEqual(x.myMap({$0}), x)
         assertEqual(empty.myMap({$0}), empty)
