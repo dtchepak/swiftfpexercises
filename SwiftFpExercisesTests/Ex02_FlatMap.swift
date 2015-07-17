@@ -19,20 +19,6 @@ For this exercise we will implement our own versions of these functions, marked 
 To be a valid flatMap function an implementation must obey three laws, but as with map, I normally summarise these as "valid implementations don't do weird stuff".
 For more info on the laws: https://en.wikibooks.org/wiki/Haskell/Understanding_monads#Monad_Laws
 
-Aside
------
-If we have a valid flatMap function for some M, and we also have a function:
-
-    unit : A -> M<A>        (also called return, pure, point)
-
-Then Ivory Tower-types say "M is a monad" (or "there is a monad instance for M").
-To say "M is a monad" is to say the type M has flatMap and unit.
-
-An example of the unit function for Optional would be:
-
-    func unit<T>(x : T) -> T? {
-      return .Some(x)
-    }
 */
 
 extension Array {
@@ -121,5 +107,82 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
             })
         
         XCTAssert(result == .None, toString(result))
+    }
+}
+
+/*
+If we have a valid flatMap function for some M, and we also have a function:
+
+    unit : A -> M<A>        (also called return, pure, point)
+
+Then Ivory Tower-types say "M is a monad" (or "there is a monad instance for M").
+To say "M is a monad" is to say the type M has flatMap and unit.
+
+Let's implement a unit function for Optional: given a value of type A, return an Optional<A> that passes the test case.
+*/
+
+extension Optional {
+    //*** TODO ***
+    static func unit<A>(x : A) -> A? {
+        return .None
+    }
+}
+
+class Ex02_3_OptionalUnit : XCTestCase {
+    func testUnitExamples() {
+        let result = Optional<Int>.unit(42)
+        let result2 = Optional<String>.unit("hello")
+
+        XCTAssert(result == .Some(42), toString(result))
+        XCTAssert(result2 == .Some("hello"), toString(result2))
+    }
+}
+
+/*
+Anything that has flatMap and a unit function also has a map function. In other words, all monads are also functors.
+
+Demonstrate this by implementing Optional.mapUsingFlatMap using Optional.flatMap and Optional.unit.
+
+EXTENSION:
+    - prove that Optional.map and Optional.mapUsingFlatMap are equivalent.
+*/
+
+extension Optional {
+    //*** TODO ***
+    //Use Optional.flatMap and Optional.unit
+    func mapUsingFlatMap<B>(f : (T -> B)) -> B? {
+        return .None
+    }
+}
+
+class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
+    func testMapEmpty() {
+        let a : Int? = nil
+        let result = a.mapUsingFlatMap(plus1)
+
+        XCTAssert(result == nil, toString(result))
+    }
+
+    func testMapPlus1() {
+        let a = Optional.Some(41)
+        let result = a.mapUsingFlatMap(plus1)
+
+        XCTAssert(result == .Some(42), toString(result))
+    }
+
+    func testExampleOfFirstLaw() {
+        let empty : Int? = .None
+        let x : Int? = .Some(42)
+
+        assertEqual(x.mapUsingFlatMap({$0}), x)
+        assertEqual(empty.mapUsingFlatMap({$0}), empty)
+    }
+
+    func testExampleOfSecondLaw() {
+        let empty : Int? = nil
+        let x = Optional.Some(42)
+
+        assertEqual( x.mapUsingFlatMap({ times10(plus1($0)) }), x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( empty.mapUsingFlatMap({ times10(plus1($0)) }), empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
     }
 }
