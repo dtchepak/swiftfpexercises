@@ -43,6 +43,11 @@ extension Array {
 }
 
 class Ex02_1_ArrayFlatMapExamples : XCTestCase {
+    func testFlatMap() {
+        let result = [ "hello world", "how are you"].flatMap({ $0.componentsSeparatedByString(" ") })
+        XCTAssert(result == ["hello", "world", "how", "are", "you"], toString(result))
+    }
+
     func productsForDepartmentId(x : Int) -> [String] {
         switch x {
         case 1: return ["tea", "coffee", "cola"]
@@ -53,10 +58,16 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
         default: return []
         }
     }
+
+    //*** TODO ***
+    //Get list of products. Use Array.flatMap, productsForDepartmentId
+    func getProductsForDepartments(depts : [Int]) -> [String] {
+        return []
+    }
     
     func testGetProductsForDepartments() {
         let departments = [1, 4]
-        let result = [] // *** TODO *** Get list of products. Use Array.flatMap, productsForDepartmentId
+        let result = getProductsForDepartments(departments)
         XCTAssert(result == ["tea", "coffee", "cola", "beer", "more beer", "cider"], toString(result))
     }
 }
