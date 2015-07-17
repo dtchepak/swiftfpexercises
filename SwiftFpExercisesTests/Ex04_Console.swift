@@ -13,7 +13,7 @@ import XCTest
 // The definition of Console<T> is at the end of this snippet, but for this exercise we only need to know how to create
 // and combine Console<T> programs.
 //
-// We can combine Console<T> programs using the `map`, `flatMap`, and `then` instance methods of Console<T>:
+// We can combine Console<T> programs using the `map`, `flatMap`, and `then` instance methods of Console<T> (these are defined at the end of this file):
 //   func flatMap<B>(f : T -> Console<B>) -> Console<B>
 //   func map<B>(f: T -> B) -> Console<B>
 //   func then<B>(next : Console<B>) -> Console<B>
@@ -56,7 +56,7 @@ class Ex04_Console : XCTestCase {
         let io = TestIO()
         
         // <TODO>
-        let program : Console<()> = noop()
+        let program : Console<()> = writeLine("Hello World!")
         // </TODO>
         
         interpret(io, program: program)
@@ -70,7 +70,7 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn("monads are yucky")
         
         // <TODO>
-        let program : Console<String> = pure("TODO")
+        let program : Console<String> = readLine()
         // </TODO>
         
         let result = interpret(io, program: program)
@@ -85,7 +85,7 @@ class Ex04_Console : XCTestCase {
     // Then we need to use one of the combining functions to get us the final program.
     func prompt(message :String) -> Console<String> {
         // <TODO>
-        return pure("TODO")
+        return writeLine(message).then(readLine())
         // </TODO>
     }
     
@@ -108,7 +108,7 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn("to learn monads")
         
         // <TODO>
-        let program = noop()
+        let program = prompt(question).flatMap(writeLine)
         // </TODO>
         
         interpret(io, program: program)
@@ -128,7 +128,12 @@ class Ex04_Console : XCTestCase {
     // - `pure(x)` will return a Console program that produces the value `x`
     func readInt(promptMsg : String) -> Console<Int> {
         // <TODO>
-        return pure(-1)
+        return prompt(promptMsg)
+            .flatMap( { x in switch x.toInt() {
+                                case .None: return writeLine("Invalid int").then(self.readInt(promptMsg))
+                                case .Some(let i): return pure(i)
+                            }
+            })
         // </TODO>
     }
     
@@ -174,7 +179,10 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn(enteredY.description)
         
         // <TODO>
-        let program : Console<()> = noop()
+        let program : Console<()> =
+        readInt("Enter X:")
+        .flatMap({ x in self.readInt("Enter Y:")
+        .flatMap({ y in writeLine( (x+y).description ) }) })
         // </TODO>
         
         interpret(io, program: program)

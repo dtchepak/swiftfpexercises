@@ -29,9 +29,12 @@ Functors are more general in Category Theory I think, but this is a useful defin
 */
 
 extension Array {
-    //*** TODO ***
     func myMap<B>(f: Element -> B) -> [B] {
-        return []
+        var result : [B] = []
+        for x in self {
+            result.append(f(x))
+        }
+        return result
     }
 }
 
@@ -68,9 +71,11 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
 }
 
 extension Optional {
-    //*** TODO ***
     func myMap<B>(f: T -> B) -> B? {
-        return .None
+        switch self {
+        case .None: return .None
+        case .Some(let x): return .Some(f(x))
+        }
     }
 }
 

@@ -22,9 +22,9 @@ For more info on the laws: https://en.wikibooks.org/wiki/Haskell/Understanding_m
 */
 
 extension Array {
-    //*** TODO ***
     func flatMap<B>(f: Element -> [B]) -> [B] {
-        return []
+        let nestedArrays = self.map(f)
+        return nestedArrays.reduce([], combine: { (b,bs) in b+bs })
     }
 }
 
@@ -45,10 +45,9 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
         }
     }
 
-    //*** TODO ***
     //Get list of products. Use Array.flatMap, productsForDepartmentId
     func getProductsForDepartments(depts : [Int]) -> [String] {
-        return []
+        return depts.flatMap(productsForDepartmentId)
     }
     
     func testGetProductsForDepartments() {
@@ -61,9 +60,11 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
 
 
 extension Optional {
-    //*** TODO ***
     func flatMap<B>(f: T -> B?) -> B? {
-        return .None
+        switch self {
+        case .None: return .None
+        case .Some(let x): return f(x)
+        }
     }
 }
 
@@ -124,7 +125,7 @@ Let's implement a unit function for Optional: given a value of type A, return an
 extension Optional {
     //*** TODO ***
     static func unit<A>(x : A) -> A? {
-        return .None
+        return .Some(x)
     }
 }
 
@@ -145,13 +146,27 @@ Demonstrate this by implementing Optional.mapUsingFlatMap using Optional.flatMap
 
 EXTENSION:
     - prove that Optional.map and Optional.mapUsingFlatMap are equivalent.
+
+mapUsingFlatMap f 
+ = flatMap ({ unit(f($0)) })                                // definition of mapUsingFlatMap
+ = flatMap ({ .Some(f($0)) })                               // definition of unit
+ = switch self {                                            // defition of flatMap
+    case .None: return .None
+    case .Some(let x): return .Some(f(x))
+   }
+ = switch self {                                            // definition of unit
+    case .None: return .None
+    case .Some(let x): return .Some(f(x))
+    }
+ = myMap f                                                  // same as myMap definition
+
+Therefore mapUsingFlatMap = myMap
 */
 
 extension Optional {
-    //*** TODO ***
     //Use Optional.flatMap and Optional.unit
     func mapUsingFlatMap<B>(f : (T -> B)) -> B? {
-        return .None
+        return self.flatMap({ Optional.unit(f($0)) })
     }
 }
 

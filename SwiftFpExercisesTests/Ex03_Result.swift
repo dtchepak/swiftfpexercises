@@ -40,60 +40,59 @@ func failure<E,A>(err : E) -> Result<E,A> {
 
 // TODO: Uncomment code block below and get the tests to pass:
 // ============================================================================================
-//extension Result {
-//    public func map<B>(f : A -> B) -> Result<E,B> {
-//        // *** TODO ***
-//        fatalError("*** TODO ***");
-//    }
-//    
-//    public func flatMap<B>(f : A -> Result<E,B>) -> Result<E, B> {
-//        // *** TODO ***
-//        fatalError("*** TODO ***");
-//    }
-//}
-//
-//
-//class Ex03_ResultExamples: XCTestCase {
-//    func testMapOverValue() {
-//        let result : Result<String,Int> = success(41).map({ x in x + 1 })
-//        
-//        XCTAssert(result.getValue() == .Some(42), result.description)
-//    }
-//    func testMapOverError() {
-//        let result : Result<String,Int> = failure("Something went wrong").map({ x in x + 1 })
-//        
-//        XCTAssert(result.getError() == .Some("Something went wrong"), result.description)
-//    }
-//    
-//    func parseInt(s : String) -> Result<String, Int> {
-//        switch s.toInt() {
-//        case .Some(let x): return success(x)
-//        case .None: return failure("Could not convert '\(s)' to int")
-//        }
-//    }
-//
-//    func between(#min : Int, max :Int)(x : Int) -> Result<String, Int> {
-//        if x >= min && x <= max {
-//            return success(x)
-//        } else {
-//            return failure("Expected between \(min) and \(max), but was \(x)")
-//        }
-//    }
-//    
-//    func parseIntBetweenZeroAndTen(s : String) -> Result<String,Int> {
-//        return parseInt(s).flatMap(between(min: 0, max: 10))
-//    }
-//    
-//    func testFlatMap() {
-//        let validResult = parseIntBetweenZeroAndTen("5")
-//        let invalidIntResult = parseIntBetweenZeroAndTen("lots")
-//        let outOfRangeResult = parseIntBetweenZeroAndTen("42")
-//        
-//        XCTAssert(validResult.getValue() == .Some(5), validResult.description)
-//        XCTAssert(invalidIntResult.getError() == .Some("Could not convert 'lots' to int"), invalidIntResult.description)
-//        XCTAssert(outOfRangeResult.getError() == .Some("Expected between 0 and 10, but was 42"), outOfRangeResult.description)
-//    }
-//}
+extension Result {
+    public func map<B>(f : A -> B) -> Result<E,B> {
+        return self.flatMap( success • f )      // Using function composition operator • defined in Operators.swift
+                                                // Equivalent to: self.flatMap( { success(f($0)) })
+    }
+    
+    public func flatMap<B>(f : A -> Result<E,B>) -> Result<E, B> {
+        return self.reduce({ failure($0) }, { f($0) })
+    }
+}
+
+
+class Ex03_ResultExamples: XCTestCase {
+    func testMapOverValue() {
+        let result : Result<String,Int> = success(41).map({ x in x + 1 })
+        
+        XCTAssert(result.getValue() == .Some(42), result.description)
+    }
+    func testMapOverError() {
+        let result : Result<String,Int> = failure("Something went wrong").map({ x in x + 1 })
+        
+        XCTAssert(result.getError() == .Some("Something went wrong"), result.description)
+    }
+    
+    func parseInt(s : String) -> Result<String, Int> {
+        switch s.toInt() {
+        case .Some(let x): return success(x)
+        case .None: return failure("Could not convert '\(s)' to int")
+        }
+    }
+
+    func between(#min : Int, max :Int)(x : Int) -> Result<String, Int> {
+        if x >= min && x <= max {
+            return success(x)
+        } else {
+            return failure("Expected between \(min) and \(max), but was \(x)")
+        }
+    }
+    
+    func parseIntBetweenZeroAndTen(s : String) -> Result<String,Int> {
+        return parseInt(s).flatMap(between(min: 0, max: 10))
+    }
+    
+    func testFlatMap() {
+        let validResult = parseIntBetweenZeroAndTen("5")
+        let invalidIntResult = parseIntBetweenZeroAndTen("lots")
+        let outOfRangeResult = parseIntBetweenZeroAndTen("42")
+        
+        XCTAssert(validResult.getValue() == .Some(5), validResult.description)
+        XCTAssert(invalidIntResult.getError() == .Some("Could not convert 'lots' to int"), invalidIntResult.description)
+        XCTAssert(outOfRangeResult.getError() == .Some("Expected between 0 and 10, but was 42"), outOfRangeResult.description)
+    }
+}
 // ============================================================================================
 
 
