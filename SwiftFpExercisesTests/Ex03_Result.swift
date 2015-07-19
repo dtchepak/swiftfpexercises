@@ -103,7 +103,7 @@ class Ex03_ResultExamples: XCTestCase {
         //Sample answer:
         //return parseInt(s).flatMap(even).flatMap(between(min: 0, max: 100))
 
-        //EXTENSION sample answer:
+        //EXTENSION 2 sample answer:
         let parse = parseInt >=> even >=> between(min: 0, max: 100)
         return parse(s)
     }
@@ -121,10 +121,14 @@ class Ex03_ResultExamples: XCTestCase {
         // Note: these tests don't specify what needs to be checked first: evenness or range. Either way is fine for this exercise.
     }
 
-	// EXTENSION:
-	// Write this function (the operator is already declared in Operators.swift):
-	//    >=> : (A -> Result<E,B>) -> (B -> Result<E,C>) -> (A -> Result<E,C>)
-	// Re-write evenFrom0To100 using this operator.
+// EXTENSIONS:
+// 1. Create a function `>>-` which is an alias for Result.flatMap (the operator is already declared in Operators.swift).
+//        >>- : (Result<E,A>, A -> Result<E,B>) -> Result<E,B>
+//    Re-write evenFrom0To100 using this operator.
+//
+// 2. Create a function `>=>` (the operator is already declared in Operators.swift):
+//        >=> : (A -> Result<E,B>, B -> Result<E,C>) -> (A -> Result<E,C>)
+//    Re-write evenFrom0To100 using this operator.
 }
 
 public func >=><E,A,B,C>(f : A -> Result<E,B>, g : B -> Result<E,C>) -> A -> Result<E,C> {
