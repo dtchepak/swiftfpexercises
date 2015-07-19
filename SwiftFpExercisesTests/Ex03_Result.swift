@@ -111,6 +111,7 @@ func failure<E,A>(err : E) -> Result<E,A> {
 //        XCTAssert(invalidIntResult.getError() == .Some("Could not convert 'lots' to int"), invalidIntResult.description)
 //        XCTAssert(outOfRangeResult.getError() == .Some("Expected between 0 and 100, but was 102"), outOfRangeResult.description)
 //        XCTAssert(oddResult.getError() == .Some("Expected even number, but was 43"), oddResult.description)
+//        // Note: these tests don't specify what needs to be checked first: evenness or range. Either way is fine for this exercise.
 //    }
 //}
 // ============================================================================================
