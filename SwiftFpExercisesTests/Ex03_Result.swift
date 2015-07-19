@@ -100,7 +100,12 @@ class Ex03_ResultExamples: XCTestCase {
         return i%2==0 ? success(i) : failure("Expected even number, but was \(i)")
     }
     func evenFrom0To100(s : String) -> Result<String, Int> {
-        return parseInt(s).flatMap(even).flatMap(between(min: 0, max: 100))
+        //Sample answer:
+        //return parseInt(s).flatMap(even).flatMap(between(min: 0, max: 100))
+
+        //EXTENSION sample answer:
+        let parse = parseInt >=> even >=> between(min: 0, max: 100)
+        return parse(s)
     }
 
     func testEvenFrom0To100() {
@@ -121,10 +126,14 @@ class Ex03_ResultExamples: XCTestCase {
 	//    >=> : (A -> Result<E,B>) -> (B -> Result<E,C>) -> (A -> Result<E,C>)
 	// Re-write evenFrom0To100 using this operator.
 }
+
+public func >=><E,A,B,C>(f : A -> Result<E,B>, g : B -> Result<E,C>) -> A -> Result<E,C> {
+    return { a in
+        f(a).flatMap(g)
+    }
+}
+
 // ============================================================================================
-
-
-
 
 // Helper functions for testing. Feel free to ignore.
 extension Result {
