@@ -96,10 +96,13 @@ class Ex03_ResultExamples: XCTestCase {
     //*** TODO ***
     //Using testFlatMap() as an example, write a function that attempts to parse an even number between 0 and 100 from a string.
     //Consider writing a function `even : Int -> Result<String, Int>` to help.
-    func evenFrom0To100(s : String) -> Result<String, Int> {
-        return failure("*** TODO ***");
+    func even(i : Int) -> Result<String,Int> {
+        return i%2==0 ? success(i) : failure("Expected even number, but was \(i)")
     }
-    
+    func evenFrom0To100(s : String) -> Result<String, Int> {
+        return parseInt(s).flatMap(even).flatMap(between(min: 0, max: 100))
+    }
+
     func testEvenFrom0To100() {
         let validResult = evenFrom0To100("42")
         let invalidIntResult = evenFrom0To100("lots")
