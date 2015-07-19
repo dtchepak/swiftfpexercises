@@ -102,7 +102,12 @@ class Ex03_ResultExamples: XCTestCase {
     func evenFrom0To100(s : String) -> Result<String, Int> {
         //Sample answer:
         //return parseInt(s).flatMap(even).flatMap(between(min: 0, max: 100))
-
+        
+        //EXTENSION 1 sample answer:
+        //return parseInt(s)
+        //        >>- even
+        //        >>- between(min: 0, max: 100)
+        
         //EXTENSION 2 sample answer:
         let parse = parseInt >=> even >=> between(min: 0, max: 100)
         return parse(s)
@@ -131,7 +136,12 @@ class Ex03_ResultExamples: XCTestCase {
 //    Re-write evenFrom0To100 using this operator.
 }
 
-public func >=><E,A,B,C>(f : A -> Result<E,B>, g : B -> Result<E,C>) -> A -> Result<E,C> {
+func >>-<E,A,B>(r : Result<E,A>, f : A -> Result<E,B>) -> Result<E,B> {
+    return r.flatMap(f)
+}
+
+
+func >=><E,A,B,C>(f : A -> Result<E,B>, g : B -> Result<E,C>) -> A -> Result<E,C> {
     return { a in
         f(a).flatMap(g)
     }
