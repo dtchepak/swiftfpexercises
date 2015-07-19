@@ -88,7 +88,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     //HINT: - use testFlatMap as a template for your answer
     //      - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
     func maybeSingleDigitNumber(s : String) -> Int? {
-        return .None
+        return s.toInt().flatMap(ensureBetween(0, inclusiveEnd: 9))
     }
     
     func testMaybeSingleDigitNumber() {
@@ -136,7 +136,10 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // If the widget has no style, or a style without a font specified, return .None.
     // HINT: Use getFontName as a template for your answer
     func hasFontLargerThan12(widget : Widget) -> Bool? {
-        return .None
+        return widget.getStyle().flatMap( {
+            s in s.getFont().flatMap( {
+                font in .Some(font.size>12) } )
+        })
     }
     
     func testFontSizeCheck() {
@@ -153,7 +156,13 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // Try to convert both first and second strings to integers (using str.toInt()).
     // If both conversions succeed, return the result of adding the two numbers. Otherwise return .None
     func maybeAdd(first : String, _ second : String) -> Int? {
-        return .None
+        return first.toInt().flatMap({ x in
+            second.toInt().map({ y in x+y }) })
+        
+        // Alternatively:
+        //return first.toInt().flatMap({ x in
+        //       second.toInt().flatMap({ y in
+        //         .Some(x+y) }) })
     }
     
     func testMaybeAdd() {
