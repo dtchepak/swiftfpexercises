@@ -66,6 +66,7 @@ public struct Parser<A> {
     
     public func parse(i : Input) -> ParseResult<A> { return self.p(i) }
 }
+// Placeholder function - don't change this function itself, just replace all calls to it with real implementations.
 public func TODO<A>() -> Parser<A> { return Parser({ i in .ErrorResult(.Failed("*** TODO ***"))}) }
 
 // Produces a parser that always fails with UnexpectedChar given the specified character
@@ -73,7 +74,9 @@ public func unexpectedCharParser<A>(c : Character) -> Parser<A> {
     return Parser({ i in failWithUnexpectedChar(c) })
 }
 
-// Return a parser that always succeeds with the given value and consumes no input
+// Return a parser that always succeeds with the given value and consumes no input.
+// Hint: Use `unexpectedCharParser` as a template for the answer (although rather than failing,
+//       it should succeed with the required value)
 public func valueParser<A>(a : A) -> Parser<A> {
     return Parser({ i in  succeed(i, a) })
 }
@@ -123,6 +126,9 @@ class Ex05_03_CharacterParserExamples : XCTestCase {
 extension Parser {
     // Return a parser that maps any succeeding result with the given function.
     // Hint: will require the construction of a `Parser<B>` and pattern matching on the result of `self.parse`.
+    // Reminder: 
+    //      enum ParseResult<A> { case ErrorResult(ParseError); case Result(Input,Box<A>) }
+    // (watch out for the Box formality. This will no longer be required as of Swift 2)
     public func map<B>(f : A -> B) -> Parser<B> {
 //        return Parser<B>({ i in
 //            switch self.parse(i) {

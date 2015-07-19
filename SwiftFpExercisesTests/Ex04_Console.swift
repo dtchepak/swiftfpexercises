@@ -11,9 +11,10 @@ import XCTest
 // A Console<()> program is one that returns void ( a.k.a. Unit, written "()" ).
 //
 // The definition of Console<T> is at the end of this snippet, but for this exercise we only need to know how to create
-// and combine Console<T> programs.
+// and combine Console<T> programs (we don't need to know how any of these things are implemented).
 //
-// We can combine Console<T> programs using the `map`, `flatMap`, and `then` instance methods of Console<T> (these are defined at the end of this file):
+// We can combine Console<T> programs using the `map`, `flatMap`, and `then` instance methods of Console<T>:
+//
 //   func flatMap<B>(f : T -> Console<B>) -> Console<B>
 //   func map<B>(f: T -> B) -> Console<B>
 //   func then<B>(next : Console<B>) -> Console<B>
@@ -44,7 +45,7 @@ public func noop() -> Console<()> {
 // These are defined at the end of the exercises if you're interested.
 
 // The ConsoleExamples class have a number of exercises defined. The aim is to tackle each exercise in order by filling out the
-// <TODO> ... </TODO> sections.
+// <TODO> ... </TODO> sections. (Don't edit stuff outside the <TODO /> tags.)
 
 // EXERCISES
 // =========
@@ -79,10 +80,11 @@ class Ex04_Console : XCTestCase {
     }
     
     // Exercise 2: create a program that will write a message prompt to stdout, then read the input entered.
-    // Once implenented `testPrompt()` should pass.
+    // Once implemented `testPrompt()` should pass.
     //
     // HINT: we need to create two console programs, one for writing to stdout, the other to read a line from stdin.
-    // Then we need to use one of the combining functions to get us the final program.
+    // Then we need to use one of the combining functions (`flatMap`, `map`, or `then`) to get us the final program.
+    // The types of these functions are shown in the comment at the top of this file.
     func prompt(message :String) -> Console<String> {
         // <TODO>
         return writeLine(message).then(readLine())
@@ -101,7 +103,7 @@ class Ex04_Console : XCTestCase {
     }
     
     // Exercise 3: prompt the user to answer a question, then write the respnse to stdout.
-    // HINT: use `prompt`, and one of the combining functions
+    // HINT: use `prompt`, and one of the combining functions (`flatMap`, `map`, or `then`)
     func testPromptAndWriteAnswerToConsole() {
         let io = TestIO()
         let question = "what is your quest?"
@@ -122,8 +124,8 @@ class Ex04_Console : XCTestCase {
     // parsing the former first before going on to the latter.)
     //
     // HINTS:
-    // - Use `prompt` to prompt and get the string entered
-    // - Swift's built in `String.toInt` will attempt to convert a string to an int
+    // - Use `prompt` to prompt and get the string entered (remember, it will write a prompt AND read the response)
+    // - Use `s.toInt()` to attempt to convert the string `s` to an `Int` (returns an `Optional<Int>`)
     // - You can call `self.readInt` recursively
     // - `pure(x)` will return a Console program that produces the value `x`
     func readInt(promptMsg : String) -> Console<Int> {
@@ -166,7 +168,7 @@ class Ex04_Console : XCTestCase {
     // Exercise 5: Create a program that:
     // - reads an integer from stdin after prompting "Enter X:"
     // - reads an integer from stdin after prompting "Enter Y:"
-    // - writes the reuslt to stdout
+    // - writes the result to stdout
     //
     // HINT: use `readInt`, `flatMap` and `writeLine`
     func testCalculator() {

@@ -113,9 +113,73 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
     }
 }
 
+class Ex01_3_UsingMap : XCTestCase {
+    func toUpper(s : String) -> String { return s.uppercaseString }
+    func even(i : Int) -> Bool { return i%2==0 }
+    func describeBool(prefix: String)(b : Bool) -> String { return "\(prefix) \(b)" }
+    
+    //*** TODO ***
+    //Convert an optional string to uppercase using map (no pattern matching allowed)
+    func toUpperOpt(s : String?) -> String? {
+        return .None
+    }
+    
+    func testToUpper() {
+        assertEqual(toUpperOpt(.Some("hello")), .Some("HELLO"))
+        assertEqual(toUpperOpt(.None), .None)
+    }
+    
+    //*** TODO ***
+    //Convert a list of strings to uppercase using map (no explicit loops allowed)
+    func toUpperArr(s : [String]) -> [String] {
+        return []
+    }
+   
+    func testToUpperArr() {
+        assertEqual(toUpperArr(["hello", "world"]), ["HELLO", "WORLD"])
+        assertEqual(toUpperArr([]), [])
+    }
+    
+    //*** TODO ***
+    //Check to see if an optional int is even (no pattern matching allowed). If the input is .None the output should also be .None.
+    func isEvenOpt(i : Int?) -> Bool? {
+        return .None
+    }
+    
+    func testIsEven() {
+        assertEqual(isEvenOpt(.Some(2)), .Some(true))
+        assertEqual(isEvenOpt(.Some(3)), .Some(false))
+        assertEqual(isEvenOpt(.None), .None)
+    }
+    
+    //*** TODO ***
+    //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
+    //The functions toUpper, even and describeBool are provided in this class.
+    //Use MULTIPLE calls to Optional.map
+    func describeEven(i : Int?) -> String? {
+        return .None
+    }
+    
+    func testDescribeEven() {
+        assertEqual(describeEven(.Some(2)), .Some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEven(.Some(3)), .Some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEven(.None), .None)
+    }
+    
+    //*** TODO ***
+    //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
+    //Use a SINGLE call to Optional.map.
+    //HINT: the second law for map functions will help here
+    func describeEvenAgain(i : Int?) -> String? {
+        return .None
+    }
 
-
-
+    func testDescribeEvenAgain() {
+        assertEqual(describeEven(.Some(2)), .Some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEven(.Some(3)), .Some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEven(.None), .None)
+    }
+}
 
 ///////////////////////////////
 // Helper functions
