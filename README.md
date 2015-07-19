@@ -7,6 +7,10 @@ The original exercises were designed to be done with an instructor, so if you ru
 
 The SwiftFpExercisesTests folder in the project contains a number of exercises, starting with `Ex01_Map.swift`. The aim is to fill in all the TODO comments and calls with valid implementations. Each time a TODO is completed one or more of the tests should start passing. Once all the TODOs are gone and the tests are passing then move on to the next exercise.
 
+Some of the exercises also contain one or more EXTENSION comments. These are additional tasks thrown in for fun⁕, usually quite abruptly and with very little guidance, for those who'd like to try something a bit different. While the main exercises are intended to be completed in order, the extensions can safely be skipped. 
+
+⁕ YMMV :)
+
 # Swift Parser Exercises
 The Parser combinators exercise in this repository is a port of an [exercise by Tony Morris/NICTA written in Haskell](https://github.com/NICTA/course/blob/af3e945d5eadcaf0a11a462e2ef7f5378b71d7f7/src/Course/Parser.hs). Please direct all credit to that original project, and attribute any mistakes to me.
 
