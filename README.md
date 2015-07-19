@@ -1,7 +1,7 @@
 
 This is a collection of ad hoc exercises written to illustrate some FP concepts in Swift, which I've tried to assemble into something relatively cohesive.
 
-The original exercises were designed to be done with an instructor, so if you run into an exercise that doesn't make sense from the context/comments alone then please ask a question via [Github Issues](https://github.com/dtchepak/swiftfpexercises/issues).
+The original exercises were designed to be done with guidance from an instructor, so if you get stuck it is not your fault! Any time you run into an exercise that doesn't make sense from the context/comments alone or seems like too big a leap then please leave feedback via [Github Issues](https://github.com/dtchepak/swiftfpexercises/issues).
 
 # Instructions
 
