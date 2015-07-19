@@ -121,7 +121,7 @@ class Ex01_3_UsingMap : XCTestCase {
     //*** TODO ***
     //Convert an optional string to uppercase using map (no pattern matching allowed)
     func toUpperOpt(s : String?) -> String? {
-        return .None
+        return s.map(toUpper)
     }
     
     func testToUpper() {
@@ -132,7 +132,7 @@ class Ex01_3_UsingMap : XCTestCase {
     //*** TODO ***
     //Convert a list of strings to uppercase using map (no explicit loops allowed)
     func toUpperArr(s : [String]) -> [String] {
-        return []
+        return s.map(toUpper)
     }
    
     func testToUpperArr() {
@@ -143,7 +143,7 @@ class Ex01_3_UsingMap : XCTestCase {
     //*** TODO ***
     //Check to see if an optional int is even (no pattern matching allowed). If the input is .None the output should also be .None.
     func isEvenOpt(i : Int?) -> Bool? {
-        return .None
+        return i.map(even)
     }
     
     func testIsEven() {
@@ -154,10 +154,9 @@ class Ex01_3_UsingMap : XCTestCase {
     
     //*** TODO ***
     //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
-    //The functions toUpper, even and describeBool are provided in this class.
-    //Use MULTIPLE calls to Optional.map
+    //Use multiple calls to Optional.map
     func describeEven(i : Int?) -> String? {
-        return .None
+        return i.map(even).map(describeBool("Number even?")).map(toUpper)
     }
     
     func testDescribeEven() {
@@ -168,10 +167,10 @@ class Ex01_3_UsingMap : XCTestCase {
     
     //*** TODO ***
     //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
-    //Use a SINGLE call to Optional.map.
+    //Use a single call to Optional.map.
     //HINT: the second law for map functions will help here
     func describeEvenAgain(i : Int?) -> String? {
-        return .None
+        return i.map(toUpper • describeBool("Number even?") • even)
     }
 
     func testDescribeEvenAgain() {
