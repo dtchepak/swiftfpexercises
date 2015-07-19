@@ -68,6 +68,35 @@ extension Optional {
 }
 
 class Ex02_2_OptionalFlatMapExamples: XCTestCase {
+    func ensureEven(i : Int) -> Int? {
+        return i%2==0 ? .Some(i) : .None
+    }
+    
+    func testFlatMap() {
+        assertEqual("42".toInt().flatMap(ensureEven), .Some(42))
+        assertEqual("123".toInt().flatMap(ensureEven), .None)
+        assertEqual("abc".toInt().flatMap(ensureEven), .None)
+    }
+    
+    func ensureBetween(start : Int, inclusiveEnd : Int)(i : Int) -> Int? {
+        return i>=start && i<=inclusiveEnd ? .Some(i) : .None
+    }
+    
+    //*** TODO ***
+    //Convert s to .Some number between 0 and 9, or return .None.
+    //HINT: - use testFlatMap as a template for your answer
+    //      - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
+    func maybeSingleDigitNumber(s : String) -> Int? {
+        return .None
+    }
+    
+    func testMaybeSingleDigitNumber() {
+        assertEqual(maybeSingleDigitNumber("9"), .Some(9))
+        assertEqual(maybeSingleDigitNumber("0"), .Some(0))
+        assertEqual(maybeSingleDigitNumber("abc"), .None)
+        assertEqual(maybeSingleDigitNumber("42"), .None)
+    }
+    
     struct Font {
         var name : String
         var size : Int
@@ -85,28 +114,52 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         }
     }
     
-    func testFlatMap() {
-        let widget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
-        
-        let result =
-            widget.getStyle().flatMap( {
-                s in s.getFont().flatMap( {
-                    font in .Some(font.name) } )
-            })
-        
-        XCTAssert(result == .Some("Helvetica"), toString(result))
+    // Example: using flatmap to chain together multiple calls that can return .None.
+    func getFontName(widget : Widget) -> String? {
+        return widget.getStyle().flatMap( {
+                 s in s.getFont().flatMap( {
+                   font in .Some(font.name) } )
+        })
     }
     
-    func testFlatMapWhenSomethingIsNil() {
-        let widget = Widget(style: Style(font: nil))
+    func testGetFontNameFromWidget() {
+        let widget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
+        let unstylishWidget = Widget(style: Style(font: nil))
+
+        assertEqual(getFontName(widget), .Some("Helvetica"))
+        assertEqual(getFontName(unstylishWidget), .None)
+    }
+    
+    //*** TODO ***
+    // If widget has a style and font, return .Some(true) if the font size is over 12, or .Some(false) if less than or equal to 12.
+    // If the widget has no style, or a style without a font specified, return .None.
+    // HINT: Use getFontName as a template for your answer
+    func hasFontLargerThan12(widget : Widget) -> Bool? {
+        return .None
+    }
+    
+    func testFontSizeCheck() {
+        let smallFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
+        let largeFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 42)))
+        let noFontWidget = Widget(style: Style(font: nil))
         
-        let result =
-            widget.getStyle().flatMap( {
-                s in s.getFont().flatMap( {
-                    font in .Some(font.name) } )
-            })
-        
-        XCTAssert(result == .None, toString(result))
+        assertEqual(hasFontLargerThan12(smallFontWidget), .Some(false))
+        assertEqual(hasFontLargerThan12(largeFontWidget), .Some(true))
+        assertEqual(hasFontLargerThan12(noFontWidget), .None)
+    }
+    
+    //*** TODO ***
+    // Try to convert both first and second strings to integers (using str.toInt()).
+    // If both conversions succeed, return the result of adding the two numbers. Otherwise return .None
+    func maybeAdd(first : String, _ second : String) -> Int? {
+        return .None
+    }
+    
+    func testMaybeAdd() {
+        assertEqual(maybeAdd("42", "100"), .Some(142))
+        assertEqual(maybeAdd("42", "aaa"), .None)
+        assertEqual(maybeAdd("zz", "100"), .None)
+        assertEqual(maybeAdd("zz", "aaa"), .None)
     }
 }
 
