@@ -92,6 +92,25 @@ class Ex03_ResultExamples: XCTestCase {
         XCTAssert(invalidIntResult.getError() == .Some("Could not convert 'lots' to int"), invalidIntResult.description)
         XCTAssert(outOfRangeResult.getError() == .Some("Expected between 0 and 10, but was 42"), outOfRangeResult.description)
     }
+    
+    //*** TODO ***
+    //Using testFlatMap() as an example, write a function that attempts to parse an even number between 0 and 100 from a string.
+    //Consider writing a function `even : Int -> Result<String, Int>` to help.
+    func evenFrom0To100(s : String) -> Result<String, Int> {
+        return failure("*** TODO ***");
+    }
+    
+    func testEvenFrom0To100() {
+        let validResult = evenFrom0To100("42")
+        let invalidIntResult = evenFrom0To100("lots")
+        let outOfRangeResult = evenFrom0To100("102")
+        let oddResult = evenFrom0To100("43")
+        
+        XCTAssert(validResult.getValue() == .Some(42), validResult.description)
+        XCTAssert(invalidIntResult.getError() == .Some("Could not convert 'lots' to int"), invalidIntResult.description)
+        XCTAssert(outOfRangeResult.getError() == .Some("Expected between 0 and 100, but was 102"), outOfRangeResult.description)
+        XCTAssert(oddResult.getError() == .Some("Expected even number, but was 43"), oddResult.description)
+    }
 }
 // ============================================================================================
 
