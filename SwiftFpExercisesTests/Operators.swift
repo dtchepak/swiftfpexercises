@@ -19,6 +19,10 @@ infix operator ||| {    // or
 associativity left
 precedence 100
 }
+infix operator >=> {    // Kleisli composition
+associativity right
+precedence 90
+}
 infix operator • {      // compose
 associativity right
 }

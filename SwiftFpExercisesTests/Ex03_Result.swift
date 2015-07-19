@@ -113,6 +113,11 @@ func failure<E,A>(err : E) -> Result<E,A> {
 //        XCTAssert(oddResult.getError() == .Some("Expected even number, but was 43"), oddResult.description)
 //        // Note: these tests don't specify what needs to be checked first: evenness or range. Either way is fine for this exercise.
 //    }
+//  
+//    // EXTENSION:
+//    // Write this function (the operator is already declared in Operators.swift):
+//    //    >=> : (A -> Result<E,B>) -> (B -> Result<E,C>) -> (A -> Result<E,C>)
+//    // Re-write evenFrom0To100 using this operator.
 //}
 // ============================================================================================
 
