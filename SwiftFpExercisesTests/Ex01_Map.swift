@@ -9,7 +9,7 @@ map is a function of the form:
 
     map : (A -> B) -> F<A> -> F<B>
 
-Arrays and Options have valid map implementations:
+Arrays and Optionals have valid map implementations:
 
     map : (A -> B) -> [A] -> [B]
     map : (A -> B) ->  A? ->  B?
