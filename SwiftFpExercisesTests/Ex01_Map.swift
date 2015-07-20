@@ -174,9 +174,9 @@ class Ex01_3_UsingMap : XCTestCase {
     }
 
     func testDescribeEvenAgain() {
-        assertEqual(describeEven(.Some(2)), .Some("NUMBER EVEN? TRUE"))
-        assertEqual(describeEven(.Some(3)), .Some("NUMBER EVEN? FALSE"))
-        assertEqual(describeEven(.None), .None)
+        assertEqual(describeEvenAgain(.Some(2)), .Some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEvenAgain(.Some(3)), .Some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEvenAgain(.None), .None)
     }
 }
 
