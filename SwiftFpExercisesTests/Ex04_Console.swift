@@ -23,11 +23,11 @@ import XCTest
 //
 // We can create instances of Console<T> programs using the following functions:
 
-// Return a program that writes a line to console and produces a string
+// Return a program that reads a line from the console and produces a string
 public func readLine() -> Console<String> {
     return ConsoleOperation<String>.ReadLine({ s in s }).toConsole()
 }
-// Return a program that reads a line from the console
+// Return a program that writes a line to the console
 public func writeLine(s : String) -> Console<()> {
     return ConsoleOperation<()>.WriteLine(s, Box(())).toConsole()
 }
