@@ -98,26 +98,20 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     }
     
     struct Font {
-        var name : String
-        var size : Int
+        let name : String
+        let size : Int
     }
     struct Style {
-        var font : Font?
-        func getFont() -> Font? {
-            return font;
-        }
+        let font : Font?
     }
     struct Widget {
-        var style : Style?
-        func getStyle() -> Style? {
-            return style;
-        }
+        let style : Style?
     }
     
     // Example: using flatmap to chain together multiple calls that can return .None.
     func getFontName(widget : Widget) -> String? {
-        return widget.getStyle().flatMap( {
-                 s in s.getFont().flatMap( {
+        return widget.style.flatMap( {
+                 s in s.font.flatMap( {
                    font in .Some(font.name) } )
         })
     }
