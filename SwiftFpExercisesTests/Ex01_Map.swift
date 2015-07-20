@@ -119,7 +119,7 @@ class Ex01_3_UsingMap : XCTestCase {
     func describeBool(prefix: String)(b : Bool) -> String { return "\(prefix) \(b)" }
     
     //*** TODO ***
-    //Convert an optional string to uppercase using map (no pattern matching allowed)
+    //Convert an optional string to uppercase using myMap (no pattern matching allowed)
     func toUpperOpt(s : String?) -> String? {
         return s.map(toUpper)
     }
@@ -130,7 +130,7 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     //*** TODO ***
-    //Convert a list of strings to uppercase using map (no explicit loops allowed)
+    //Convert a list of strings to uppercase using myMap (no explicit loops allowed)
     func toUpperArr(s : [String]) -> [String] {
         return s.map(toUpper)
     }
