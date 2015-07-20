@@ -9,7 +9,7 @@ flatMap is a function of the form:
 
     flatMap : (A -> M<B>) -> M<A> -> M<B>
 
-Arrays and Options have valid flatMap implementations:
+Arrays and Optionals have valid flatMap implementations:
 
     flatMap : (A -> [B]) -> [A] -> [B]
     flatMap : (A ->  B?) ->  A? ->  B?
