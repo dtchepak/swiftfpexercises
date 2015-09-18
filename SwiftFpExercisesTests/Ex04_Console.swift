@@ -115,7 +115,7 @@ class Ex04_Console : XCTestCase {
         
         interpret(io, program: program)
         let out = io.allOutput()
-        XCTAssert(out == ["what is your quest?", "to learn monads"], out.description)
+        XCTAssert(out == [question, "to learn monads"], out.description)
     }
     
     // Exercise 4: create a program that will write a prompt to std out, then read what is entered to stdin.
