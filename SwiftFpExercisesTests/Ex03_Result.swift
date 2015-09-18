@@ -8,13 +8,12 @@ EXERCISE
 
 Result represents the result of an operation that can fail with some Error E, or succeed with a Value of type A.
 See the `success` and `failure` functions for easy ways to create these values.
-(Ignore the Box thing, it is to help the compiler deal with both primitive and non-primitive types, and will no longer be required as of Swift 2).
 
 Uncomment the code-block marked "TODO: Uncomment", then implement Result.map and Result.flatMap. ResultTests has some examples of how these can be used.
 */
 public enum Result<E,A> : CustomStringConvertible {
-    case Error(Box<E>)
-    case Value(Box<A>)
+    case Error(E)
+    case Value(A)
     
     // This function is to give an example of how to pattern match on Result values.
     // You don't have to use it and can safely ignore it.
@@ -25,17 +24,17 @@ public enum Result<E,A> : CustomStringConvertible {
     // any Result to type B.
     public func reduce<B>(onError: E -> B, _ onValue: A -> B) -> B {
         switch self {
-        case .Error(let e): return onError(e.value)
-        case .Value(let v): return onValue(v.value)
+        case .Error(let e): return onError(e)
+        case .Value(let v): return onValue(v)
         }
     }
 }
 
 func success<E,A>(value : A) -> Result<E,A> {
-    return .Value(Box(value))
+    return .Value(value)
 }
 func failure<E,A>(err : E) -> Result<E,A> {
-    return .Error(Box(err))
+    return .Error(err)
 }
 
 // TODO: Uncomment code block below and get the tests to pass:
