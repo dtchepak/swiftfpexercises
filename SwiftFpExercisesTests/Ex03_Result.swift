@@ -12,7 +12,7 @@ See the `success` and `failure` functions for easy ways to create these values.
 
 Uncomment the code-block marked "TODO: Uncomment", then implement Result.map and Result.flatMap. ResultTests has some examples of how these can be used.
 */
-public enum Result<E,A> : Printable {
+public enum Result<E,A> : CustomStringConvertible {
     case Error(Box<E>)
     case Value(Box<A>)
     

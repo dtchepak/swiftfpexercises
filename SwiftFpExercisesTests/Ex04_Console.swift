@@ -230,7 +230,7 @@ public class Console<T> {
 public enum Either<L,R> {
     case Left(Box<L>)
     case Right(Box<R>)
-    public func reduce<A>(#onLeft: L -> A, onRight: R->A) -> A {
+    public func reduce<A>(onLeft onLeft: L -> A, onRight: R->A) -> A {
         switch self {
         case .Left(let l): return onLeft(l.value)
         case .Right(let r): return onRight(r.value)
@@ -277,7 +277,7 @@ class TestIO : ConsoleIO {
     }
 }
 
-func interpret<T>(io : ConsoleIO, #program : Console<T>) -> T {
+func interpret<T>(io : ConsoleIO, program : Console<T>) -> T {
     let op = program.getOp()
     switch op {
     case .Left(let l) : return l.value

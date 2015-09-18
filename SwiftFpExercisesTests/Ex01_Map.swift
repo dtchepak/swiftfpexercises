@@ -40,21 +40,21 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let a : [Int] = []
         let result = a.myMap(plus1)
         
-        XCTAssert( result == [], toString(result))
+        XCTAssert( result == [], String(result))
     }
     
     func testMapPlus1() {
         let result = [1,2,3].myMap(plus1)
         
-        XCTAssert(result ==  [2,3,4], toString(result))
+        XCTAssert(result ==  [2,3,4], String(result))
     }
     
     func testExampleOfFirstLaw() {
         let empty : [Int] = []
         let x = [1,2,3]
         
-        assertEqual(x.myMap({$0}), x)
-        assertEqual(empty.myMap({$0}), empty)
+        assertEqual(x.myMap({$0}), expected: x)
+        assertEqual(empty.myMap({$0}), expected: empty)
     }
     
     
@@ -62,14 +62,14 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let empty : [Int] = []
         let x = [1,2,3]
         
-        assertEqual( x.myMap({ times10(plus1($0)) }), x.myMap(plus1).myMap(times10) )
-        assertEqual( empty.myMap({ times10(plus1($0)) }), empty.myMap(plus1).myMap(times10) )
+        assertEqual( x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
+        assertEqual( empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
     }
 }
 
 extension Optional {
     //*** TODO ***
-    func myMap<B>(f: T -> B) -> B? {
+    func myMap<B>(f: Wrapped -> B) -> B? {
         return .None
     }
 }
@@ -80,22 +80,22 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
         let a : Int? = nil
         let result = a.myMap(plus1)
         
-        XCTAssert(result == nil, toString(result))
+        XCTAssert(result == nil, String(result))
     }
     
     func testMapPlus1() {
         let a = Optional.Some(41)
         let result = a.myMap(plus1)
         
-        XCTAssert(result == .Some(42), toString(result))
+        XCTAssert(result == .Some(42), String(result))
     }
     
     func testExampleOfFirstLaw() {
         let empty : Int? = .None
         let x : Int? = .Some(42)
         
-        assertEqual(x.myMap({$0}), x)
-        assertEqual(empty.myMap({$0}), empty)
+        assertEqual(x.myMap({$0}), expected: x)
+        assertEqual(empty.myMap({$0}), expected: empty)
     }
     
     
@@ -103,8 +103,8 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
         let empty : Int? = nil
         let x = Optional.Some(42)
         
-        assertEqual( x.myMap({ times10(plus1($0)) }), x.myMap(plus1).myMap(times10) )
-        assertEqual( empty.myMap({ times10(plus1($0)) }), empty.myMap(plus1).myMap(times10) )
+        assertEqual( x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
+        assertEqual( empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
     }
 }
 
@@ -120,8 +120,8 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     func testToUpper() {
-        assertEqual(toUpperOpt(.Some("hello")), .Some("HELLO"))
-        assertEqual(toUpperOpt(.None), .None)
+        assertEqual(toUpperOpt(.Some("hello")), expected: .Some("HELLO"))
+        assertEqual(toUpperOpt(.None), expected: .None)
     }
     
     //*** TODO ***
@@ -131,8 +131,8 @@ class Ex01_3_UsingMap : XCTestCase {
     }
    
     func testToUpperArr() {
-        assertEqual(toUpperArr(["hello", "world"]), ["HELLO", "WORLD"])
-        assertEqual(toUpperArr([]), [])
+        assertEqual(toUpperArr(["hello", "world"]), expected: ["HELLO", "WORLD"])
+        assertEqual(toUpperArr([]), expected: [])
     }
     
     //*** TODO ***
@@ -142,9 +142,9 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     func testIsEven() {
-        assertEqual(isEvenOpt(.Some(2)), .Some(true))
-        assertEqual(isEvenOpt(.Some(3)), .Some(false))
-        assertEqual(isEvenOpt(.None), .None)
+        assertEqual(isEvenOpt(.Some(2)), expected: .Some(true))
+        assertEqual(isEvenOpt(.Some(3)), expected: .Some(false))
+        assertEqual(isEvenOpt(.None), expected: .None)
     }
     
     //*** TODO ***
@@ -156,9 +156,9 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     func testDescribeEven() {
-        assertEqual(describeEven(.Some(2)), .Some("NUMBER EVEN? TRUE"))
-        assertEqual(describeEven(.Some(3)), .Some("NUMBER EVEN? FALSE"))
-        assertEqual(describeEven(.None), .None)
+        assertEqual(describeEven(.Some(2)), expected: .Some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEven(.Some(3)), expected: .Some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEven(.None), expected: .None)
     }
     
     //*** TODO ***
@@ -170,9 +170,9 @@ class Ex01_3_UsingMap : XCTestCase {
     }
 
     func testDescribeEvenAgain() {
-        assertEqual(describeEvenAgain(.Some(2)), .Some("NUMBER EVEN? TRUE"))
-        assertEqual(describeEvenAgain(.Some(3)), .Some("NUMBER EVEN? FALSE"))
-        assertEqual(describeEvenAgain(.None), .None)
+        assertEqual(describeEvenAgain(.Some(2)), expected: .Some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEvenAgain(.Some(3)), expected: .Some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEvenAgain(.None), expected: .None)
     }
 }
 

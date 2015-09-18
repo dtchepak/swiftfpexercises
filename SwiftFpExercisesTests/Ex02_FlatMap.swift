@@ -31,7 +31,7 @@ extension Array {
 class Ex02_1_ArrayFlatMapExamples : XCTestCase {
     func testFlatMap() {
         let result = [ "hello world", "how are you"].flatMap({ $0.componentsSeparatedByString(" ") })
-        XCTAssert(result == ["hello", "world", "how", "are", "you"], toString(result))
+        XCTAssert(result == ["hello", "world", "how", "are", "you"], String(result))
     }
 
     func productsForDepartmentId(x : Int) -> [String] {
@@ -54,7 +54,7 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
     func testGetProductsForDepartments() {
         let departments = [1, 4]
         let result = getProductsForDepartments(departments)
-        XCTAssert(result == ["tea", "coffee", "cola", "beer", "more beer", "cider"], toString(result))
+        XCTAssert(result == ["tea", "coffee", "cola", "beer", "more beer", "cider"], String(result))
     }
 }
 
@@ -62,7 +62,7 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
 
 extension Optional {
     //*** TODO ***
-    func flatMap<B>(f: T -> B?) -> B? {
+    func flatMap<B>(f: Wrapped -> B?) -> B? {
         return .None
     }
 }
@@ -73,9 +73,9 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     }
     
     func testFlatMap() {
-        assertEqual("42".toInt().flatMap(ensureEven), .Some(42))
-        assertEqual("123".toInt().flatMap(ensureEven), .None)
-        assertEqual("abc".toInt().flatMap(ensureEven), .None)
+        assertEqual(Int("42").flatMap(ensureEven), expected: .Some(42))
+        assertEqual(Int("123").flatMap(ensureEven), expected: .None)
+        assertEqual(Int("abc").flatMap(ensureEven), expected: .None)
     }
     
     func ensureBetween(start : Int, inclusiveEnd : Int)(i : Int) -> Int? {
@@ -91,10 +91,10 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     }
     
     func testMaybeSingleDigitNumber() {
-        assertEqual(maybeSingleDigitNumber("9"), .Some(9))
-        assertEqual(maybeSingleDigitNumber("0"), .Some(0))
-        assertEqual(maybeSingleDigitNumber("abc"), .None)
-        assertEqual(maybeSingleDigitNumber("42"), .None)
+        assertEqual(maybeSingleDigitNumber("9"), expected: .Some(9))
+        assertEqual(maybeSingleDigitNumber("0"), expected: .Some(0))
+        assertEqual(maybeSingleDigitNumber("abc"), expected: .None)
+        assertEqual(maybeSingleDigitNumber("42"), expected: .None)
     }
     
     struct Font {
@@ -120,8 +120,8 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         let widget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
         let unstylishWidget = Widget(style: Style(font: nil))
 
-        assertEqual(getFontName(widget), .Some("Helvetica"))
-        assertEqual(getFontName(unstylishWidget), .None)
+        assertEqual(getFontName(widget), expected: .Some("Helvetica"))
+        assertEqual(getFontName(unstylishWidget), expected: .None)
     }
     
     //*** TODO ***
@@ -137,9 +137,9 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         let largeFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 42)))
         let noFontWidget = Widget(style: Style(font: nil))
         
-        assertEqual(hasFontLargerThan12(smallFontWidget), .Some(false))
-        assertEqual(hasFontLargerThan12(largeFontWidget), .Some(true))
-        assertEqual(hasFontLargerThan12(noFontWidget), .None)
+        assertEqual(hasFontLargerThan12(smallFontWidget), expected: .Some(false))
+        assertEqual(hasFontLargerThan12(largeFontWidget), expected: .Some(true))
+        assertEqual(hasFontLargerThan12(noFontWidget), expected: .None)
     }
     
     //*** TODO ***
@@ -150,10 +150,10 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     }
     
     func testMaybeAdd() {
-        assertEqual(maybeAdd("42", "100"), .Some(142))
-        assertEqual(maybeAdd("42", "aaa"), .None)
-        assertEqual(maybeAdd("zz", "100"), .None)
-        assertEqual(maybeAdd("zz", "aaa"), .None)
+        assertEqual(maybeAdd("42", "100"), expected: .Some(142))
+        assertEqual(maybeAdd("42", "aaa"), expected: .None)
+        assertEqual(maybeAdd("zz", "100"), expected: .None)
+        assertEqual(maybeAdd("zz", "aaa"), expected: .None)
     }
 }
 
@@ -180,8 +180,8 @@ class Ex02_3_OptionalUnit : XCTestCase {
         let result = Optional<Int>.unit(42)
         let result2 = Optional<String>.unit("hello")
 
-        XCTAssert(result == .Some(42), toString(result))
-        XCTAssert(result2 == .Some("hello"), toString(result2))
+        XCTAssert(result == .Some(42), String(result))
+        XCTAssert(result2 == .Some("hello"), String(result2))
     }
 }
 
@@ -197,7 +197,7 @@ EXTENSION:
 extension Optional {
     //*** TODO ***
     //Use Optional.flatMap and Optional.unit
-    func mapUsingFlatMap<B>(f : (T -> B)) -> B? {
+    func mapUsingFlatMap<B>(f : (Wrapped -> B)) -> B? {
         return .None
     }
 }
@@ -207,29 +207,29 @@ class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
         let a : Int? = nil
         let result = a.mapUsingFlatMap(plus1)
 
-        XCTAssert(result == nil, toString(result))
+        XCTAssert(result == nil, String(result))
     }
 
     func testMapPlus1() {
         let a = Optional.Some(41)
         let result = a.mapUsingFlatMap(plus1)
 
-        XCTAssert(result == .Some(42), toString(result))
+        XCTAssert(result == .Some(42), String(result))
     }
 
     func testExampleOfFirstLaw() {
         let empty : Int? = .None
         let x : Int? = .Some(42)
 
-        assertEqual(x.mapUsingFlatMap({$0}), x)
-        assertEqual(empty.mapUsingFlatMap({$0}), empty)
+        assertEqual(x.mapUsingFlatMap({$0}), expected: x)
+        assertEqual(empty.mapUsingFlatMap({$0}), expected: empty)
     }
 
     func testExampleOfSecondLaw() {
         let empty : Int? = nil
         let x = Optional.Some(42)
 
-        assertEqual( x.mapUsingFlatMap({ times10(plus1($0)) }), x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
-        assertEqual( empty.mapUsingFlatMap({ times10(plus1($0)) }), empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( x.mapUsingFlatMap({ times10(plus1($0)) }), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( empty.mapUsingFlatMap({ times10(plus1($0)) }), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
     }
 }
