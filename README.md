@@ -3,6 +3,8 @@ This is a collection of ad hoc exercises written to illustrate some FP concepts 
 
 The original exercises were designed to be done with guidance from an instructor, so if you get stuck it is not your fault! Any time you run into an exercise that doesn't make sense from the context/comments alone or seems like too big a leap then please leave feedback via [Github Issues](https://github.com/dtchepak/swiftfpexercises/issues).
 
+Requires Swift 2+/Xcode 7+. See [swift-1.2 branch](https://github.com/dtchepak/swiftfpexercises/tree/swift-1.2) for the original exercises targeting Swift 1.2.
+
 # Instructions
 
 The SwiftFpExercisesTests folder in the project contains a number of exercises, starting with `Ex01_Map.swift`. The aim is to fill in all the TODO comments and calls with valid implementations. Each time a TODO is completed one or more of the tests should start passing. Once all the TODOs are gone and the tests are passing then move on to the next exercise.
