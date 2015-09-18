@@ -29,7 +29,7 @@ public func readLine() -> Console<String> {
 }
 // Return a program that writes a line to the console
 public func writeLine(s : String) -> Console<()> {
-    return ConsoleOperation<()>.WriteLine(s, Box(())).toConsole()
+    return ConsoleOperation<()>.WriteLine(s, ()).toConsole()
 }
 // Return a program that produces the given value
 public func pure<T>(t : T) -> Console<T> {
@@ -50,6 +50,11 @@ public func noop() -> Console<()> {
 // EXERCISES
 // =========
 class Ex04_Console : XCTestCase {
+    func ignore<T>(_ : T) -> () { }
+    
+    func testDemoNonTermination() {
+        ignore ( noop() ) // <-- does not terminate now Box has been removed
+    }
     
     // Exercise 0: create a program that writes "Hello World!" to the console.
     // Set the `program` variable using one of the creation functions above.
@@ -198,8 +203,8 @@ class Ex04_Console : XCTestCase {
 public class Console<T> {
     // <BOILERPLATE>
     let op : Either<T, ConsoleOperation<Console<T>>>
-    init(_ pure :T) { self.op = .Left(Box(pure)) }
-    init(_ op : ConsoleOperation<Console<T>>) { self.op = .Right(Box(op))  }
+    init(_ pure :T) { self.op = .Left(pure) }
+    init(_ op : ConsoleOperation<Console<T>>) { self.op = .Right(op)  }
     func getOp() -> Either<T,ConsoleOperation<Console<T>>> { return self.op }
     // </BOILERPLATE>
     
@@ -228,21 +233,21 @@ public class Console<T> {
 }
 
 public enum Either<L,R> {
-    case Left(Box<L>)
-    case Right(Box<R>)
+    case Left(L)
+    case Right(R)
     public func reduce<A>(onLeft onLeft: L -> A, onRight: R->A) -> A {
         switch self {
-        case .Left(let l): return onLeft(l.value)
-        case .Right(let r): return onRight(r.value)
+        case .Left(let l): return onLeft(l)
+        case .Right(let r): return onRight(r)
         }
     }
 }
 public enum ConsoleOperation<T> {
-    case WriteLine (String, Box<T>)
+    case WriteLine (String, T)
     case ReadLine (String -> T)
     public func map<B>(f : T -> B) -> ConsoleOperation<B> {
         switch self {
-        case .WriteLine(let (s, t)): return .WriteLine(s, Box(f(t.value)))
+        case .WriteLine(let (s, t)): return .WriteLine(s, f(t))
         case .ReadLine(let r): return .ReadLine( { s in f(r(s)) } )
         }
     }
@@ -280,12 +285,12 @@ class TestIO : ConsoleIO {
 func interpret<T>(io : ConsoleIO, program : Console<T>) -> T {
     let op = program.getOp()
     switch op {
-    case .Left(let l) : return l.value
+    case .Left(let l) : return l
     case .Right(let r):
-        switch r.value {
+        switch r {
         case .WriteLine(let (s, next)):
             io.writeStdOut(s)
-            return interpret(io, program: next.value)
+            return interpret(io, program: next)
         case .ReadLine(let f):
             let s = io.readStdIn()
             return interpret(io, program: f(s))
