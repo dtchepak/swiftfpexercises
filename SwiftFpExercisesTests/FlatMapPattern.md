@@ -15,7 +15,7 @@ most of the exercises. So here it is: Dave's guide to fumbling through with flat
 MAP
 ===
 
-If we have a Parser<T>, and we want a Parser<S>, we can use map to change the `T` to an `S` (provided
+If we have a `Parser<T>`, and we want a `Parser<S>`, we can use map to change the `T` to an `S` (provided
 we have a function `T -> S` handy). The intuition I use is that I want to change the value contained with
 the Parser instance. 
 
