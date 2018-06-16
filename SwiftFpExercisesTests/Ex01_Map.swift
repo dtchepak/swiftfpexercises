@@ -30,7 +30,7 @@ Functors are more general in Category Theory I think, but this is a useful defin
 
 extension Array {
     //*** TODO ***
-    func myMap<B>(f: Element -> B) -> [B] {
+    func myMap<B>(_ f: (Element) -> B) -> [B] {
         return []
     }
 }
@@ -40,13 +40,13 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let a : [Int] = []
         let result = a.myMap(plus1)
         
-        XCTAssert( result == [], String(result))
+        XCTAssert( result == [], String(describing: result))
     }
     
     func testMapPlus1() {
         let result = [1,2,3].myMap(plus1)
         
-        XCTAssert(result ==  [2,3,4], String(result))
+        XCTAssert(result == [2,3,4], String(describing: result))
     }
     
     func testExampleOfFirstLaw() {
@@ -62,15 +62,15 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let empty : [Int] = []
         let x = [1,2,3]
         
-        assertEqual( x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
-        assertEqual( empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
+        assertEqual(x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
+        assertEqual(empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
     }
 }
 
 extension Optional {
     //*** TODO ***
-    func myMap<B>(f: Wrapped -> B) -> B? {
-        return .None
+    func myMap<B>(_ f: (Wrapped) -> B) -> B? {
+        return .none
     }
 }
 
@@ -80,19 +80,19 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
         let a : Int? = nil
         let result = a.myMap(plus1)
         
-        XCTAssert(result == nil, String(result))
+        XCTAssert(result == nil, String(describing: result))
     }
     
     func testMapPlus1() {
-        let a = Optional.Some(41)
+        let a = Optional.some(41)
         let result = a.myMap(plus1)
         
-        XCTAssert(result == .Some(42), String(result))
+        XCTAssert(result == .some(42), String(describing: result))
     }
     
     func testExampleOfFirstLaw() {
-        let empty : Int? = .None
-        let x : Int? = .Some(42)
+        let empty : Int? = .none
+        let x : Int? = .some(42)
         
         assertEqual(x.myMap({$0}), expected: x)
         assertEqual(empty.myMap({$0}), expected: empty)
@@ -101,7 +101,7 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
     
     func testExampleOfSecondLaw() {
         let empty : Int? = nil
-        let x = Optional.Some(42)
+        let x = Optional.some(42)
         
         assertEqual( x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
         assertEqual( empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
@@ -109,24 +109,25 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
 }
 
 class Ex01_3_UsingMap : XCTestCase {
-    func toUpper(s : String) -> String { return s.uppercaseString }
-    func even(i : Int) -> Bool { return i%2==0 }
-    func describeBool(prefix: String)(b : Bool) -> String { return "\(prefix) \(b)" }
+    func toUpper(_ s : String) -> String { return s.uppercased() }
+    func even(_ i : Int) -> Bool { return i%2==0 }
+    func describeBool(_ prefix: String) -> (Bool) -> String {
+        return { b in "\(prefix) \(b)" } }
     
     //*** TODO ***
     //Convert an optional string to uppercase using myMap (no pattern matching allowed)
-    func toUpperOpt(s : String?) -> String? {
-        return .None
+    func toUpperOpt(_ s : String?) -> String? {
+        return .none
     }
     
     func testToUpper() {
-        assertEqual(toUpperOpt(.Some("hello")), expected: .Some("HELLO"))
-        assertEqual(toUpperOpt(.None), expected: .None)
+        assertEqual(toUpperOpt(.some("hello")), expected: .some("HELLO"))
+        assertEqual(toUpperOpt(.none), expected: .none)
     }
     
     //*** TODO ***
     //Convert a list of strings to uppercase using myMap (no explicit loops allowed)
-    func toUpperArr(s : [String]) -> [String] {
+    func toUpperArr(_ s : [String]) -> [String] {
         return []
     }
    
@@ -136,61 +137,61 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     //*** TODO ***
-    //Check to see if an optional int is even (no pattern matching allowed). If the input is .None the output should also be .None.
-    func isEvenOpt(i : Int?) -> Bool? {
-        return .None
+    //Check to see if an optional int is even (no pattern matching allowed). If the input is .none the output should also be .none.
+    func isEvenOpt(_ i : Int?) -> Bool? {
+        return .none
     }
     
     func testIsEven() {
-        assertEqual(isEvenOpt(.Some(2)), expected: .Some(true))
-        assertEqual(isEvenOpt(.Some(3)), expected: .Some(false))
-        assertEqual(isEvenOpt(.None), expected: .None)
+        assertEqual(isEvenOpt(.some(2)), expected: .some(true))
+        assertEqual(isEvenOpt(.some(3)), expected: .some(false))
+        assertEqual(isEvenOpt(.none), expected: .none)
     }
     
     //*** TODO ***
-    //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
+    //Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
     //The functions toUpper, even and describeBool are provided in this class.
     //Use MULTIPLE calls to Optional.map
-    func describeEven(i : Int?) -> String? {
-        return .None
+    func describeEven(_ i : Int?) -> String? {
+        return .none
     }
     
     func testDescribeEven() {
-        assertEqual(describeEven(.Some(2)), expected: .Some("NUMBER EVEN? TRUE"))
-        assertEqual(describeEven(.Some(3)), expected: .Some("NUMBER EVEN? FALSE"))
-        assertEqual(describeEven(.None), expected: .None)
+        assertEqual(describeEven(.some(2)), expected: .some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEven(.some(3)), expected: .some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEven(.none), expected: .none)
     }
     
     //*** TODO ***
-    //Take an optional int, then describe it as .Some("NUMBER EVEN? TRUE"), .Some("NUMBER EVEN? FALSE"), or .None. No pattern matching.
+    //Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
     //Use a SINGLE call to Optional.map.
     //HINT: the second law for map functions will help here
-    func describeEvenAgain(i : Int?) -> String? {
-        return .None
+    func describeEvenAgain(_ i : Int?) -> String? {
+        return .none
     }
 
     func testDescribeEvenAgain() {
-        assertEqual(describeEvenAgain(.Some(2)), expected: .Some("NUMBER EVEN? TRUE"))
-        assertEqual(describeEvenAgain(.Some(3)), expected: .Some("NUMBER EVEN? FALSE"))
-        assertEqual(describeEvenAgain(.None), expected: .None)
+        assertEqual(describeEvenAgain(.some(2)), expected: .some("NUMBER EVEN? TRUE"))
+        assertEqual(describeEvenAgain(.some(3)), expected: .some("NUMBER EVEN? FALSE"))
+        assertEqual(describeEvenAgain(.none), expected: .none)
     }
 }
 
 ///////////////////////////////
 // Helper functions
 
-func plus1(x : Int) -> Int {
+func plus1(_ x : Int) -> Int {
     return x+1
 }
-func times10(x : Int) -> Int {
+func times10(_ x : Int) -> Int {
     return x*10
 }
 
 // Assertion helpers
-func assertEqual<T : Equatable>(actual : [T], expected : [T], file: String = __FILE__, line: UInt = __LINE__) {
+func assertEqual<T : Equatable>(_ actual : [T], expected : [T], file: StaticString = #file, line: UInt = #line) {
     XCTAssert(actual == expected, "Expected: \(expected), Actual: \(actual)", file: file, line: line)
 }
-func assertEqual<T : Equatable>(actual : T?, expected : T?, file: String = __FILE__, line: UInt = __LINE__) {
-    XCTAssert(actual == expected, "Expected: \(expected), Actual: \(actual)", file: file, line: line)
+func assertEqual<T : Equatable>(_ actual : T?, expected : T?, file: StaticString = #file, line: UInt = #line) {
+    XCTAssert(actual == expected, "Expected: \(String(describing: expected)), Actual: \(String(describing: actual))", file: file, line: line)
 }
 

@@ -3,7 +3,10 @@ This is a collection of ad hoc exercises written to illustrate some FP concepts 
 
 The original exercises were designed to be done with guidance from an instructor, so if you get stuck it is not your fault! Any time you run into an exercise that doesn't make sense from the context/comments alone or seems like too big a leap then please leave feedback via [Github Issues](https://github.com/dtchepak/swiftfpexercises/issues).
 
-Requires Swift 2+/Xcode 7+. See [swift-1.2 branch](https://github.com/dtchepak/swiftfpexercises/tree/swift-1.2) for the original exercises targeting Swift 1.2.
+Requires Swift 4+/Xcode 9.
+
+* See [swift-2 branch](https://github.com/dtchepak/swiftfpexercises/tree/swift-2) for Swift 2+/Xcode 7+ version.
+* See [swift-1.2 branch](https://github.com/dtchepak/swiftfpexercises/tree/swift-1.2) for the original exercises targeting Swift 1.2.
 
 # Instructions
 

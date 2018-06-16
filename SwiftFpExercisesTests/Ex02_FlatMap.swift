@@ -23,18 +23,18 @@ For more info on the laws: https://en.wikibooks.org/wiki/Haskell/Understanding_m
 
 extension Array {
     //*** TODO ***
-    func flatMap<B>(f: Element -> [B]) -> [B] {
+    func flatMap<B>(_ f: (Element) -> [B]) -> [B] {
         return []
     }
 }
 
 class Ex02_1_ArrayFlatMapExamples : XCTestCase {
     func testFlatMap() {
-        let result = [ "hello world", "how are you"].flatMap({ $0.componentsSeparatedByString(" ") })
-        XCTAssert(result == ["hello", "world", "how", "are", "you"], String(result))
+        let result = [ "hello world", "how are you"].flatMap({ $0.components(separatedBy: " ") })
+        XCTAssert(result == ["hello", "world", "how", "are", "you"], String(describing: result))
     }
 
-    func productsForDepartmentId(x : Int) -> [String] {
+    func productsForDepartmentId(_ x : Int) -> [String] {
         switch x {
         case 1: return ["tea", "coffee", "cola"]
         case 2: return ["chips", "dip"]
@@ -47,14 +47,14 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
 
     //*** TODO ***
     //Get list of products. Use Array.flatMap, productsForDepartmentId
-    func getProductsForDepartments(depts : [Int]) -> [String] {
+    func getProductsForDepartments(_ depts : [Int]) -> [String] {
         return []
     }
     
     func testGetProductsForDepartments() {
         let departments = [1, 4]
         let result = getProductsForDepartments(departments)
-        XCTAssert(result == ["tea", "coffee", "cola", "beer", "more beer", "cider"], String(result))
+        XCTAssert(result == ["tea", "coffee", "cola", "beer", "more beer", "cider"], String(describing: result))
     }
 }
 
@@ -62,39 +62,41 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
 
 extension Optional {
     //*** TODO ***
-    func flatMap<B>(f: Wrapped -> B?) -> B? {
-        return .None
+    func flatMap<B>(_ f: (Wrapped) -> B?) -> B? {
+        return .none
     }
 }
 
 class Ex02_2_OptionalFlatMapExamples: XCTestCase {
-    func ensureEven(i : Int) -> Int? {
-        return i%2==0 ? .Some(i) : .None
+    func ensureEven(_ i : Int) -> Int? {
+        return i%2==0 ? .some(i) : .none
     }
     
     func testFlatMap() {
-        assertEqual(Int("42").flatMap(ensureEven), expected: .Some(42))
-        assertEqual(Int("123").flatMap(ensureEven), expected: .None)
-        assertEqual(Int("abc").flatMap(ensureEven), expected: .None)
+        assertEqual(Int("42").flatMap(ensureEven), expected: .some(42))
+        assertEqual(Int("123").flatMap(ensureEven), expected: .none)
+        assertEqual(Int("abc").flatMap(ensureEven), expected: .none)
     }
     
-    func ensureBetween(start : Int, inclusiveEnd : Int)(i : Int) -> Int? {
-        return i>=start && i<=inclusiveEnd ? .Some(i) : .None
+    func ensureBetween(start : Int, inclusiveEnd : Int) -> (Int) -> Int? {
+        return { i in
+            return i>=start && i<=inclusiveEnd ? .some(i) : .none
+        }
     }
     
     //*** TODO ***
-    //Convert s to .Some number between 0 and 9, or return .None.
+    //Convert s to .some number between 0 and 9, or return .none.
     //HINT: - use testFlatMap as a template for your answer
     //      - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
-    func maybeSingleDigitNumber(s : String) -> Int? {
-        return .None
+    func maybeSingleDigitNumber(_ s : String) -> Int? {
+        return .none
     }
     
     func testMaybeSingleDigitNumber() {
-        assertEqual(maybeSingleDigitNumber("9"), expected: .Some(9))
-        assertEqual(maybeSingleDigitNumber("0"), expected: .Some(0))
-        assertEqual(maybeSingleDigitNumber("abc"), expected: .None)
-        assertEqual(maybeSingleDigitNumber("42"), expected: .None)
+        assertEqual(maybeSingleDigitNumber("9"), expected: .some(9))
+        assertEqual(maybeSingleDigitNumber("0"), expected: .some(0))
+        assertEqual(maybeSingleDigitNumber("abc"), expected: .none)
+        assertEqual(maybeSingleDigitNumber("42"), expected: .none)
     }
     
     struct Font {
@@ -108,11 +110,11 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         let style : Style?
     }
     
-    // Example: using flatmap to chain together multiple calls that can return .None.
-    func getFontName(widget : Widget) -> String? {
+    // Example: using flatmap to chain together multiple calls that can return .none.
+    func getFontName(_ widget : Widget) -> String? {
         return widget.style.flatMap( {
                  s in s.font.flatMap( {
-                   font in .Some(font.name) } )
+                   font in .some(font.name) } )
         })
     }
     
@@ -120,16 +122,16 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         let widget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
         let unstylishWidget = Widget(style: Style(font: nil))
 
-        assertEqual(getFontName(widget), expected: .Some("Helvetica"))
-        assertEqual(getFontName(unstylishWidget), expected: .None)
+        assertEqual(getFontName(widget), expected: .some("Helvetica"))
+        assertEqual(getFontName(unstylishWidget), expected: .none)
     }
     
     //*** TODO ***
-    // If widget has a style and font, return .Some(true) if the font size is over 12, or .Some(false) if less than or equal to 12.
-    // If the widget has no style, or a style without a font specified, return .None.
+    // If widget has a style and font, return .some(true) if the font size is over 12, or .some(false) if less than or equal to 12.
+    // If the widget has no style, or a style without a font specified, return .none.
     // HINT: Use getFontName as a template for your answer
-    func hasFontLargerThan12(widget : Widget) -> Bool? {
-        return .None
+    func hasFontLargerThan12(_ widget : Widget) -> Bool? {
+        return .none
     }
     
     func testFontSizeCheck() {
@@ -137,23 +139,23 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         let largeFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 42)))
         let noFontWidget = Widget(style: Style(font: nil))
         
-        assertEqual(hasFontLargerThan12(smallFontWidget), expected: .Some(false))
-        assertEqual(hasFontLargerThan12(largeFontWidget), expected: .Some(true))
-        assertEqual(hasFontLargerThan12(noFontWidget), expected: .None)
+        assertEqual(hasFontLargerThan12(smallFontWidget), expected: .some(false))
+        assertEqual(hasFontLargerThan12(largeFontWidget), expected: .some(true))
+        assertEqual(hasFontLargerThan12(noFontWidget), expected: .none)
     }
     
     //*** TODO ***
     // Try to convert both first and second strings to integers (using str.toInt()).
-    // If both conversions succeed, return the result of adding the two numbers. Otherwise return .None
-    func maybeAdd(first : String, _ second : String) -> Int? {
-        return .None
+    // If both conversions succeed, return the result of adding the two numbers. Otherwise return .none
+    func maybeAdd(_ first : String, _ second : String) -> Int? {
+        return .none
     }
     
     func testMaybeAdd() {
-        assertEqual(maybeAdd("42", "100"), expected: .Some(142))
-        assertEqual(maybeAdd("42", "aaa"), expected: .None)
-        assertEqual(maybeAdd("zz", "100"), expected: .None)
-        assertEqual(maybeAdd("zz", "aaa"), expected: .None)
+        assertEqual(maybeAdd("42", "100"), expected: .some(142))
+        assertEqual(maybeAdd("42", "aaa"), expected: .none)
+        assertEqual(maybeAdd("zz", "100"), expected: .none)
+        assertEqual(maybeAdd("zz", "aaa"), expected: .none)
     }
 }
 
@@ -170,8 +172,8 @@ Let's implement a unit function for Optional: given a value of type A, return an
 
 extension Optional {
     //*** TODO ***
-    static func unit<A>(x : A) -> A? {
-        return .None
+    static func unit<A>(_ x : A) -> A? {
+        return .none
     }
 }
 
@@ -180,8 +182,8 @@ class Ex02_3_OptionalUnit : XCTestCase {
         let result = Optional<Int>.unit(42)
         let result2 = Optional<String>.unit("hello")
 
-        XCTAssert(result == .Some(42), String(result))
-        XCTAssert(result2 == .Some("hello"), String(result2))
+        XCTAssert(result == .some(42), String(describing: result))
+        XCTAssert(result2 == .some("hello"), String(describing: result2))
     }
 }
 
@@ -197,8 +199,8 @@ EXTENSION:
 extension Optional {
     //*** TODO ***
     //Use Optional.flatMap and Optional.unit
-    func mapUsingFlatMap<B>(f : (Wrapped -> B)) -> B? {
-        return .None
+    func mapUsingFlatMap<B>(_ f : (Wrapped) -> B) -> B? {
+        return .none
     }
 }
 
@@ -207,19 +209,19 @@ class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
         let a : Int? = nil
         let result = a.mapUsingFlatMap(plus1)
 
-        XCTAssert(result == nil, String(result))
+        XCTAssert(result == nil, String(describing: result))
     }
 
     func testMapPlus1() {
-        let a = Optional.Some(41)
+        let a = Optional.some(41)
         let result = a.mapUsingFlatMap(plus1)
 
-        XCTAssert(result == .Some(42), String(result))
+        XCTAssert(result == .some(42), String(describing: result))
     }
 
     func testExampleOfFirstLaw() {
-        let empty : Int? = .None
-        let x : Int? = .Some(42)
+        let empty : Int? = .none
+        let x : Int? = .some(42)
 
         assertEqual(x.mapUsingFlatMap({$0}), expected: x)
         assertEqual(empty.mapUsingFlatMap({$0}), expected: empty)
@@ -227,7 +229,7 @@ class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
 
     func testExampleOfSecondLaw() {
         let empty : Int? = nil
-        let x = Optional.Some(42)
+        let x = Optional.some(42)
 
         assertEqual( x.mapUsingFlatMap({ times10(plus1($0)) }), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
         assertEqual( empty.mapUsingFlatMap({ times10(plus1($0)) }), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )

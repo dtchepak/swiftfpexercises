@@ -22,7 +22,7 @@ public enum Result<E,A> : CustomStringConvertible {
     // It works by handling each case of Result. If we tell it how to
     // convert an Error to type B, and a Value to type B, then we can convert
     // any Result to type B.
-    public func reduce<B>(onError: E -> B, _ onValue: A -> B) -> B {
+    public func reduce<B>(_ onError: (E) -> B, _ onValue: (A) -> B) -> B {
         switch self {
         case .Error(let e): return onError(e)
         case .Value(let v): return onValue(v)
@@ -30,10 +30,10 @@ public enum Result<E,A> : CustomStringConvertible {
     }
 }
 
-func success<E,A>(value : A) -> Result<E,A> {
+func success<E,A>(_ value : A) -> Result<E,A> {
     return .Value(value)
 }
-func failure<E,A>(err : E) -> Result<E,A> {
+func failure<E,A>(_ err : E) -> Result<E,A> {
     return .Error(err)
 }
 
@@ -130,10 +130,10 @@ func failure<E,A>(err : E) -> Result<E,A> {
 // Helper functions for testing. Feel free to ignore.
 extension Result {
     public func getValue() -> A? {
-        return self.reduce({ _ in .None }, { a in .Some(a) })
+        return self.reduce({ _ in .none }, { a in .some(a) })
     }
     public func getError() -> E? {
-        return self.reduce({ e in .Some(e) }, { _ in .None })
+        return self.reduce({ e in .some(e) }, { _ in .none })
     }
     public var description : String {
         return self.reduce({ e in "Error: \(e)" }, { v in "Value: \(v)" })

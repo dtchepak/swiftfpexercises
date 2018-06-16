@@ -42,8 +42,8 @@ public enum ParseResult<A> : CustomStringConvertible {
     }
     public func isError() -> Bool {
         switch self {
-        case ErrorResult(_) : return true
-        case Result(_): return false
+        case .ErrorResult(_) : return true
+        case .Result(_): return false
         }
     }
 }
@@ -51,40 +51,40 @@ public enum ParseResult<A> : CustomStringConvertible {
 // Convenience functions for creating ParseResult<A> values.
 public func succeed<A>(remainingInput : Input, value : A) -> ParseResult<A> { return .Result(remainingInput, Box(value)) }
 public func failWithUnexpectedEof<A>() -> ParseResult<A> { return .ErrorResult(.UnexpectedEof) }
-public func failWithExpectedEof<A>(i : Input) -> ParseResult<A> { return .ErrorResult(.ExpectedEof(i)) }
-public func failWithUnexpectedChar<A>(c : Character) -> ParseResult<A> { return .ErrorResult(.UnexpectedChar(c)) }
+public func failWithExpectedEof<A>(_ i : Input) -> ParseResult<A> { return .ErrorResult(.ExpectedEof(i)) }
+public func failWithUnexpectedChar<A>(_ c : Character) -> ParseResult<A> { return .ErrorResult(.UnexpectedChar(c)) }
 public func failParse<A>() -> ParseResult<A>{ return .ErrorResult(.Failed("Parse failed")) }
-public func failWithParseError<A>(e : ParseError) -> ParseResult<A> { return .ErrorResult(e) }
+public func failWithParseError<A>(_ e : ParseError) -> ParseResult<A> { return .ErrorResult(e) }
 
 
 // A Parser<A> wraps a function that takes some input and returns either:
 // * a value of type A, and the remaining input left to parse
 // * a parse error
 public struct Parser<A> {
-    let p : Input -> ParseResult<A>
-    init(_ p : Input -> ParseResult<A>) { self.p = p }
+    let p : (Input) -> ParseResult<A>
+    init(_ p : @escaping (Input) -> ParseResult<A>) { self.p = p }
     
-    public func parse(i : Input) -> ParseResult<A> { return self.p(i) }
+    public func parse(_ i : Input) -> ParseResult<A> { return self.p(i) }
 }
 // Placeholder function - don't change this function itself, just replace all calls to it with real implementations.
 public func TODO<A>() -> Parser<A> { return Parser({ i in .ErrorResult(.Failed("*** TODO ***"))}) }
 
 // Produces a parser that always fails with UnexpectedChar given the specified character
-public func unexpectedCharParser<A>(c : Character) -> Parser<A> {
+public func unexpectedCharParser<A>(_ c : Character) -> Parser<A> {
     return Parser({ i in failWithUnexpectedChar(c) })
 }
 
 // Return a parser that always succeeds with the given value and consumes no input.
 // Hint: Use `unexpectedCharParser` as a template for the answer (although rather than failing,
 //       it should succeed with the required value)
-public func valueParser<A>(a : A) -> Parser<A> {
+public func valueParser<A>(_ a : A) -> Parser<A> {
     return TODO()
 }
 
 class Ex05_01_ValueParserExamples : XCTestCase {
     func testValueParser() {
         let result = valueParser(2).parse("hello")
-        assertEqual(result, expected: succeed("hello", value: 2))
+        assertEqual(result, expected: succeed(remainingInput: "hello", value: 2))
     }
 }
 
@@ -111,7 +111,7 @@ public func character() -> Parser<Character> {
 class Ex05_03_CharacterParserExamples : XCTestCase {
     func testCharacter() {
         let result = character().parse("abcd")
-        assertEqual(result, expected: succeed("bcd", value: "a"))
+        assertEqual(result, expected: succeed(remainingInput: "bcd", value: "a"))
     }
     func testCharacterWithEmptyInput() {
         let result = character().parse("")
@@ -125,7 +125,7 @@ extension Parser {
     // Reminder: 
     //      enum ParseResult<A> { case ErrorResult(ParseError); case Result(Input,Box<A>) }
     // (watch out for the Box formality. This will no longer be required as of Swift 2)
-    public func map<B>(f : A -> B) -> Parser<B> {
+    public func map<B>(_ f : (A) -> B) -> Parser<B> {
         return TODO()
     }
 }
@@ -133,11 +133,11 @@ extension Parser {
 class Ex05_04_MapParserExamples : XCTestCase {
     func testMap() {
         let result = character().map(toUpper).parse("abc")
-        assertEqual(result, expected: succeed("bc", value: "A"))
+        assertEqual(result, expected: succeed(remainingInput: "bc", value: "A"))
     }
     func testMapAgain() {
         let result = valueParser(10).map({ $0+1 }).parse("abc")
-        assertEqual(result, expected: succeed("abc", value: 11))
+        assertEqual(result, expected: succeed(remainingInput: "abc", value: 11))
     }
     func testMapWithErrorResult() {
         let result = failed().map({ $0 + 1 }).parse("abc")
@@ -154,7 +154,7 @@ extension Parser {
     //
     //   * if this parser fails with an error the returned parser fails with that error.
     //
-    public func flatMap<B>(f : A -> Parser<B>) -> Parser<B> {
+    public func flatMap<B>(_ f : (A) -> Parser<B>) -> Parser<B> {
         return TODO()
     }
 }
@@ -167,11 +167,11 @@ class Ex05_05_FlatMapParserExamples : XCTestCase {
     })
     func testFlatMap() {
         let result = skipOneX.parse("abcd")
-        assertEqual(result, expected: succeed("bcd", value: "a"))
+        assertEqual(result, expected: succeed(remainingInput: "bcd", value: "a"))
     }
     func testFlatMapAgain() {
         let result = skipOneX.parse("xabc")
-        assertEqual(result, expected: succeed("bc", value: "a"))
+        assertEqual(result, expected: succeed(remainingInput: "bc", value: "a"))
     }
     func testFlatMapWithNoInput() {
         let result = skipOneX.parse("")
@@ -198,7 +198,7 @@ public func >>><A,B>(first : Parser<A>, second : Parser<B>) -> Parser<B> {
 class Ex05_06_SkipParserExamples : XCTestCase {
     func testSkipParser() {
         let result = (character() >>> valueParser("x")).parse("abc")
-        assertEqual(result, expected: succeed("bc", value: "x"))
+        assertEqual(result, expected: succeed(remainingInput: "bc", value: "x"))
     }
     func testSkipParserWhenFirstParserFails() {
         let result = (character() >>> valueParser("x")).parse("")
@@ -218,15 +218,15 @@ public func |||<A>(first: Parser<A>, second:Parser<A>) -> Parser<A> {
 class Ex05_07_OrParserExamples : XCTestCase {
     func testOrWhenFirstSucceeds() {
         let result = (character() ||| valueParser("v")).parse("abc")
-        assertEqual(result, expected: succeed("bc", value: "a"))
+        assertEqual(result, expected: succeed(remainingInput: "bc", value: "a"))
     }
     func testOrWhenFirstFails() {
         let result = (failed() ||| valueParser("v")).parse("")
-        assertEqual(result, expected: succeed("", value: "v"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "v"))
     }
     func testOrWhenFirstFailsDueToLackOfInput() {
         let result = (character() ||| valueParser("v")).parse("")
-        assertEqual(result, expected: succeed("", value: "v"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "v"))
     }
 }
 
@@ -236,7 +236,7 @@ class Ex05_07_OrParserExamples : XCTestCase {
 //
 // Hint: - Use valueParser, |||, and atLeast1 parser (defined below).
 //       - list and atLeast1 are mutually recursive calls!
-public func list<A>(p : Parser<A>) -> Parser<[A]> {
+public func list<A>(_ p : Parser<A>) -> Parser<[A]> {
     return TODO()
 }
 // Return a parser that produces at least one value from the given parser then
@@ -245,7 +245,7 @@ public func list<A>(p : Parser<A>) -> Parser<[A]> {
 //
 // Hint: - Use flatMap, valueParser, and list (defined above)
 //       - list and atLeast1 are mutually recursive calls!
-public func atLeast1<A>(p : Parser<A>) -> Parser<[A]> {
+public func atLeast1<A>(_ p : Parser<A>) -> Parser<[A]> {
     return TODO()
 }
 
@@ -253,15 +253,15 @@ public func atLeast1<A>(p : Parser<A>) -> Parser<[A]> {
 class Ex05_08_ListParserExamples : XCTestCase {
     func testList() {
         let result = list(character()).parse("abc")
-        assertEqual(result, expected: succeed("", value: ["a", "b", "c"]))
+        assertEqual(result, expected: succeed(remainingInput: "", value: ["a", "b", "c"]))
     }
     func testListWithNoInput() {
         let result = list(character()).parse("")
-        assertEqual(result, expected: succeed("", value: []))
+        assertEqual(result, expected: succeed(remainingInput: "", value: []))
     }
     func testAtLeastOne() {
         let result = atLeast1(character()).parse("abc")
-        assertEqual(result, expected: succeed("", value: ["a", "b", "c"]))
+        assertEqual(result, expected: succeed(remainingInput: "", value: ["a", "b", "c"]))
     }
     func testAtLeast1WithNoInput() {
         let result = atLeast1(character()).parse("")
@@ -275,13 +275,13 @@ class Ex05_08_ListParserExamples : XCTestCase {
 //   * The character does not satisfy the given predicate.
 //
 // Hint: The flatMap, valueParser, unexpectedCharParser and character functions will be helpful here.
-public func satisfy(p : Character -> Bool) -> Parser<Character> {
+public func satisfy(_ p : (Character) -> Bool) -> Parser<Character> {
     return TODO()
 }
 class Ex05_09_SatisfyParserExamples : XCTestCase {
     func testParseUpper() {
         let result = satisfy(isUpperCase).parse("Abc")
-        assertEqual(result, expected: succeed("bc", value: "A"))
+        assertEqual(result, expected: succeed(remainingInput: "bc", value: "A"))
     }
     func testParseUpperWithLowercaseInput() {
         let result = satisfy(isUpperCase).parse("abc")
@@ -295,14 +295,14 @@ class Ex05_09_SatisfyParserExamples : XCTestCase {
 //   * The produced character is not equal to the given character.
 //
 // Hint: Use the satisfy function.
-public func charIs(c : Character) -> Parser<Character> {
+public func charIs(_ c : Character) -> Parser<Character> {
     return TODO()
 }
 
 class Ex05_10_CharIsParserExamples : XCTestCase {
     func testCharIs() {
         let result = charIs("x").parse("xyz")
-        assertEqual(result, expected: succeed("yz", value: "x"))
+        assertEqual(result, expected: succeed(remainingInput: "yz", value: "x"))
     }
     func testCharIsWhenItIsnt() {
         let result = charIs("x").parse("abc")
@@ -324,7 +324,7 @@ public func digit() -> Parser<Character> {
 class Ex05_11_DigitParserExamples : XCTestCase {
     func testDigit() {
         let result = digit().parse("123")
-        assertEqual(result, expected: succeed("23", value: "1"))
+        assertEqual(result, expected: succeed(remainingInput: "23", value: "1"))
     }
     func testDigitWhenItIsnt() {
         let result = digit().parse("abc")
@@ -345,11 +345,11 @@ public func natural() -> Parser<Int> {
 class Ex05_12_NaturalParserExamples : XCTestCase {
     func testParseNatural() {
         let result = natural().parse("123")
-        assertEqual(result, expected: succeed("", value: 123))
+        assertEqual(result, expected: succeed(remainingInput: "", value: 123))
     }
     func testParseNaturalWithLeftOverInput() {
         let result = natural().parse("42abc")
-        assertEqual(result, expected: succeed("abc", value: 42))
+        assertEqual(result, expected: succeed(remainingInput: "abc", value: 42))
     }
     func testParseNaturalWithNoDigitsInInput() {
         let result = natural().parse("abc")
@@ -374,7 +374,7 @@ public func space() -> Parser<Character> {
 class Ex05_13_SpaceParserExamples : XCTestCase {
     func testParseSpace() {
         let result = space().parse(" 123")
-        assertEqual(result, expected: succeed("123", value: " "))
+        assertEqual(result, expected: succeed(remainingInput: "123", value: " "))
     }
     func testParseSpaceWhenInputHasNoSpace() {
         let result = space().parse("123")
@@ -400,7 +400,7 @@ public func spaces() -> Parser<String> {
 class Ex05_14_SpacesParserExamples : XCTestCase {
     func testParseSpaces() {
         let result = spaces().parse("    123")
-        assertEqual(result, expected: succeed("123", value: "    "))
+        assertEqual(result, expected: succeed(remainingInput: "123", value: "    "))
     }
     func testParseSpaceWhenInputHasNoSpace() {
         let result = spaces().parse("123")
@@ -455,11 +455,11 @@ class Ex05_15_LowerUpperAlphaExamples : XCTestCase {
         testParser(alpha(), passWith: ("alpha", "lpha", "a"), failWith: ("123", "1"))
     }
     
-    func testParser(p : Parser<Character>, passWith : (String, String, Character), failWith : (String, Character)) {
+    func testParser(_ p : Parser<Character>, passWith : (String, String, Character), failWith : (String, Character)) {
         let passResult = p.parse(passWith.0)
         let failResult = p.parse(failWith.0)
         
-        assertEqual(passResult, expected: succeed(passWith.1, value: passWith.2))
+        assertEqual(passResult, expected: succeed(remainingInput: passWith.1, value: passWith.2))
         assertEqual(failResult, expected: failWithUnexpectedChar(failWith.1))
     }
 }
@@ -469,7 +469,7 @@ class Ex05_15_LowerUpperAlphaExamples : XCTestCase {
 //
 // Hint: - Use flatMap, valueParser and Array.reduceRight.
 //       - There is a `cons : (A, [A]) -> [A]` helper function if that helps.
-public func sequenceParser<A>(pp : [Parser<A>]) -> Parser<[A]> {
+public func sequenceParser<A>(_ pp : [Parser<A>]) -> Parser<[A]> {
     return TODO()
 }
 
@@ -477,7 +477,7 @@ class Ex05_16_SequenceParserExamples : XCTestCase {
     let exampleParsers = [ character(), charIs("x"), upper() ]
     func testSequence() {
         let result = sequenceParser(exampleParsers).map(charsToString).parse("axCdef")
-        assertEqual(result, expected: succeed("def", value: "axC"))
+        assertEqual(result, expected: succeed(remainingInput: "def", value: "axC"))
     }
     func testSequenceWithUnexpectedChar() {
         let result = sequenceParser(exampleParsers).map(charsToString).parse("abCdef")
@@ -489,17 +489,17 @@ class Ex05_16_SequenceParserExamples : XCTestCase {
 // This parser fails if the given parser fails in the attempt to produce the given number of values.
 //
 // Hint: Use sequenceParser and replicate (replicate : (Integer, A) -> [A])
-public func thisMany<A>(n : Int, p : Parser<A>) -> Parser<[A]> {
+public func thisMany<A>(_ n : Int, _ p : Parser<A>) -> Parser<[A]> {
     return TODO()
 }
 
 class Ex05_17_ThisManyExamples : XCTestCase {
     func testThisMany() {
-        let result = thisMany(4, p: upper()).map(charsToString).parse("ABCDefg")
-        assertEqual(result, expected: succeed("efg", value: "ABCD"))
+        let result = thisMany(4, upper()).map(charsToString).parse("ABCDefg")
+        assertEqual(result, expected: succeed(remainingInput: "efg", value: "ABCD"))
     }
     func testThisManyWithUnexpectedChar() {
-        let result = thisMany(4, p: upper()).map(charsToString).parse("AbCDefg")
+        let result = thisMany(4, upper()).map(charsToString).parse("AbCDefg")
         assertEqual(result, expected: failWithUnexpectedChar("b"))
     }
 }
@@ -538,15 +538,15 @@ public func firstNameParser() -> Parser<String> {
 class Ex05_18_FirstNameParserExamples : XCTestCase {
     func testFirstNameParser() {
         let result = firstNameParser().parse("Daniel")
-        assertEqual(result, expected: succeed("", value: "Daniel"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "Daniel"))
     }
     func testParseUntilUnmatchedCharacter() {
         let result = firstNameParser().parse("RobeRt")
-        assertEqual(result, expected: succeed("Rt", value: "Robe"))
+        assertEqual(result, expected: succeed(remainingInput: "Rt", value: "Robe"))
     }
     func testParseUntilUnmatchedCharacter2() {
         let result = firstNameParser().parse("Matt$1")
-        assertEqual(result, expected: succeed("$1", value: "Matt"))
+        assertEqual(result, expected: succeed(remainingInput: "$1", value: "Matt"))
     }
     func testFailOnNonMatching() {
         let result = firstNameParser().parse("timothy")
@@ -563,11 +563,11 @@ public func surnameParser() -> Parser<String> {
 class Ex05_19_SurnameParserExamples : XCTestCase {
     func testFirstNameParser() {
         let result = surnameParser().parse("Something")
-        assertEqual(result, expected: succeed("", value: "Something"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "Something"))
     }
     func testParseUntilUnmatchedCharacter() {
         let result = surnameParser().parse("Something2")
-        assertEqual(result, expected: succeed("2", value: "Something"))
+        assertEqual(result, expected: succeed(remainingInput: "2", value: "Something"))
     }
     func testFailOnNonMatchingCapital() {
         let result = surnameParser().parse("lowercase")
@@ -599,11 +599,11 @@ public func smokerParser() -> Parser<Bool> {
 class Ex20_SmokerParserExamples : XCTestCase {
     func testY() {
         let result = smokerParser().parse("y")
-        assertEqual(result, expected: succeed("", value: true))
+        assertEqual(result, expected: succeed(remainingInput: "", value: true))
     }
     func testN() {
         let result = smokerParser().parse("n")
-        assertEqual(result, expected: succeed("", value: false))
+        assertEqual(result, expected: succeed(remainingInput: "", value: false))
     }
     func testUnexpectedChar() {
         let result = smokerParser().parse("x")
@@ -629,15 +629,15 @@ public func phoneBodyParser() -> Parser<String> {
 class Ex21_PhoneBodyExamples : XCTestCase {
     func testPhoneBodyParser() {
         let result = phoneBodyParser().parse("123-456")
-        assertEqual(result, expected: succeed("", value: "123-456"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "123-456"))
     }
     func testParseUntilUnmatchedCharacter() {
         let result = phoneBodyParser().parse("123-4a56")
-        assertEqual(result, expected: succeed("a56", value: "123-4"))
+        assertEqual(result, expected: succeed(remainingInput: "a56", value: "123-4"))
     }
     func testParseUntilUnmatchedCharacter2() {
         let result = phoneBodyParser().parse("a123-456")
-        assertEqual(result, expected: succeed("a123-456", value: ""))
+        assertEqual(result, expected: succeed(remainingInput: "a123-456", value: ""))
     }
 }
 
@@ -654,11 +654,11 @@ public func phoneParser() -> Parser<String> {
 class Ex22_PhoneParserExamples : XCTestCase {
     func testValidPhone() {
         let result = phoneParser().parse("123-456#")
-        assertEqual(result, expected: succeed("", value: "123-456"))
+        assertEqual(result, expected: succeed(remainingInput: "", value: "123-456"))
     }
     func testValidPhoneWithLeftOvers() {
         let result = phoneParser().parse("123-456#abc")
-        assertEqual(result, expected: succeed("abc", value: "123-456"))
+        assertEqual(result, expected: succeed(remainingInput: "abc", value: "123-456"))
     }
     func testPhoneNumberWithoutTerminatingHash() {
         let result = phoneParser().parse("123-456")
@@ -690,12 +690,12 @@ class Ex23_PersonParserExamples : XCTestCase {
     func testValid() {
         let result = personParser().parse("123 Fred Clarkson y 123-456.789#")
         let expected = Person(age: 123, firstName: "Fred", surname: "Clarkson", smoker: true, phone: "123-456.789")
-        assertEqual(result, expected: succeed("", value: expected))
+        assertEqual(result, expected: succeed(remainingInput: "", value: expected))
     }
     func testValidWithLeftOvers() {
         let result = personParser().parse("123 Fred Clarkson y 123-456.789# rest")
         let expected = Person(age: 123, firstName: "Fred", surname: "Clarkson", smoker: true, phone: "123-456.789")
-        assertEqual(result, expected: succeed(" rest", value: expected))
+        assertEqual(result, expected: succeed(remainingInput: " rest", value: expected))
     }
     func testEmptyInput() {
         let result = personParser().parse("")
@@ -734,7 +734,7 @@ class Ex23_PersonParserExamples : XCTestCase {
 
 // EXTENSIONS
 // - implement apply operator <*>
-public func <*><A,B>(f : Parser<A->B>, p: Parser<A>) -> Parser<B> {
+public func <*><A,B>(f : Parser<(A)->B>, p: Parser<A>) -> Parser<B> {
     return TODO()
 }
 // - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <*> and cons2 (curried cons function)
@@ -744,43 +744,45 @@ public func <*><A,B>(f : Parser<A->B>, p: Parser<A>) -> Parser<B> {
 
 
 // Misc helper functions
-func toUpper(c : Character) -> Character {
-    return String(c).uppercaseString.characters.first ?? c
+func toUpper(_ c : Character) -> Character {
+    return String(c).uppercased().first ?? c
 }
-let isUpperCase = charIsInSet(NSCharacterSet.uppercaseLetterCharacterSet())
-let isLowerCase = charIsInSet(NSCharacterSet.lowercaseLetterCharacterSet())
-let isSpace = charIsInSet(NSCharacterSet.whitespaceCharacterSet())
-let isAlpha = charIsInSet(NSCharacterSet.letterCharacterSet())
-func isDigit(c : Character) -> Bool {
+let isUpperCase = charIsInSet(NSCharacterSet.uppercaseLetters)
+let isLowerCase = charIsInSet(NSCharacterSet.lowercaseLetters)
+let isSpace = charIsInSet(NSCharacterSet.whitespaces)
+let isAlpha = charIsInSet(NSCharacterSet.letters)
+func isDigit(_ c : Character) -> Bool {
     return ("0"..."9") ~= c
 }
-func parseIntOr0(cc : [Character]) -> Int {
+func parseIntOr0(_ cc : [Character]) -> Int {
     return Int(charsToString(cc)) ?? 0
 }
-func charsToString(cc : [Character]) -> String {
+func charsToString(_ cc : [Character]) -> String {
     return String(cc)
 }
-func charIsInSet(cset : NSCharacterSet)(c : Character) -> Bool {
-    let s = String(c).utf16
-    // If unicode char has a component in this set, let's say it is a member.
-    // No idea if this is correct, but it at least works for the inputs in this file.
-    for codeUnit in s {
-        if cset.characterIsMember(codeUnit) {
-            return true
+func charIsInSet(_ cset : CharacterSet) -> (Character) -> Bool {
+    return { c in
+        let s = String(c).unicodeScalars
+        // If unicode char has a component in this set, let's say it is a member.
+        // No idea if this is correct, but it at least works for the inputs in this file.
+        for codeUnit in s {
+            if cset.contains(codeUnit) {
+                return true
+            }
         }
-    }
-    return false
+        return false
+        }
 }
-func cons<A>(a :A, aa:[A]) -> [A] {
+func cons<A>(_ a :A, _ aa:[A]) -> [A] {
     return [a] + aa
 }
-func cons2<A>(a :A)-> [A] -> [A] {
+func cons2<A>(_ a :A)-> ([A]) -> [A] {
     return { aa in [a] + aa }
 }
 extension Array {
     func reduceRight<A>(defaultValue: A, combine: (Element, A) -> A) -> A {
         var v = defaultValue
-        for item in Array(self.reverse()) {
+        for item in self.reversed() {
             v = combine(item, v)
         }
         return v
@@ -792,10 +794,10 @@ func replicate<A>(n : Int, a :A) -> [A] {
 
 
 // Assertion helpers
-func assertEqual<T : Equatable>(actual : ParseResult<T>, expected : ParseResult<T>, file: String = __FILE__, line: UInt = __LINE__) {
+func assertEqual<T : Equatable>(_ actual : ParseResult<T>, expected : ParseResult<T>, file: StaticString = #file, line: UInt = #line) {
     XCTAssert(actual == expected, "Expected: \(expected.description), Actual: \(actual.description)", file: file, line: line)
 }
-func assertEqual<T : Equatable>(actual : ParseResult<[T]>, expected : ParseResult<[T]>, file: String = __FILE__, line: UInt = __LINE__) {
+func assertEqual<T : Equatable>(_ actual : ParseResult<[T]>, expected : ParseResult<[T]>, file: StaticString = #file, line: UInt = #line) {
     XCTAssert(actual == expected, "Expected: \(expected.description), Actual: \(actual.description)", file: file, line: line)
 }
 
@@ -833,9 +835,9 @@ public func ==(lhs: Person, rhs: Person) -> Bool {
 }
 
 // Custom Operators
-public func <^><A,B>(f : A->B, p: Parser<A>) -> Parser<B> {
+public func <^><A,B>(_ f : (A)->B, _ p: Parser<A>) -> Parser<B> {
     return p.map(f)
 }
-public func >>-<A,B>(p : Parser<A>, f : A -> Parser<B>) -> Parser<B> {
+public func >>-<A,B>(_ p : Parser<A>, _ f : (A) -> Parser<B>) -> Parser<B> {
     return p.flatMap(f)
 }

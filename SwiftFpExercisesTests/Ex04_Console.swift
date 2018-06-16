@@ -28,11 +28,11 @@ public func readLine() -> Console<String> {
     return ConsoleOperation<String>.ReadLine({ s in s }).toConsole()
 }
 // Return a program that writes a line to the console
-public func writeLine(s : String) -> Console<()> {
+public func writeLine(_ s : String) -> Console<()> {
     return ConsoleOperation<()>.WriteLine(s, Box(())).toConsole()
 }
 // Return a program that produces the given value
-public func pure<T>(t : T) -> Console<T> {
+public func pure<T>(_ t : T) -> Console<T> {
     return Console(t)
 }
 // Return a program that does nothing
@@ -85,7 +85,7 @@ class Ex04_Console : XCTestCase {
     // HINT: we need to create two console programs, one for writing to stdout, the other to read a line from stdin.
     // Then we need to use one of the combining functions (`flatMap`, `map`, or `then`) to get us the final program.
     // The types of these functions are shown in the comment at the top of this file.
-    func prompt(message :String) -> Console<String> {
+    func prompt(_ message :String) -> Console<String> {
         // <TODO>
         return pure("TODO")
         // </TODO>
@@ -128,7 +128,7 @@ class Ex04_Console : XCTestCase {
     // - Use `s.toInt()` to attempt to convert the string `s` to an `Int` (returns an `Optional<Int>`)
     // - You can call `self.readInt` recursively
     // - `pure(x)` will return a Console program that produces the value `x`
-    func readInt(promptMsg : String) -> Console<Int> {
+    func readInt(_ promptMsg : String) -> Console<Int> {
         // <TODO>
         return pure(-1)
         // </TODO>
@@ -207,11 +207,11 @@ public class Console<T> {
     // USEFUL STUFF WE CAN DO WITH CONSOLE PROGRAMS
     
     // Use this operation's output to get the next operation to run.
-    public func flatMap<B>(f : T -> Console<B>) -> Console<B> {
+    public func flatMap<B>(_ f : @escaping (T) -> Console<B>) -> Console<B> {
         return op.reduce(
             onLeft: { t in f(t) },
             onRight: { (c:ConsoleOperation<Console<T>>) in
-                let cb : ConsoleOperation<Console<B>> = c.map({ t in t.flatMap(f) })
+                let cb : ConsoleOperation<Console<B>> = c.map { t in t.flatMap(f) }
                 return Console<B>(cb)
         })
     }
@@ -222,7 +222,7 @@ public class Console<T> {
     }
     
     // Modify this operation to produce a value of type B.
-    public func map<B>(f: T -> B) -> Console<B> {
+    public func map<B>(_ f: @escaping (T) -> B) -> Console<B> {
         return flatMap({ t in Console<B>(f(t)) })
     }
 }
@@ -230,7 +230,7 @@ public class Console<T> {
 public enum Either<L,R> {
     case Left(Box<L>)
     case Right(Box<R>)
-    public func reduce<A>(onLeft onLeft: L -> A, onRight: R->A) -> A {
+    public func reduce<A>(onLeft: (L) -> A, onRight: (R) -> A) -> A {
         switch self {
         case .Left(let l): return onLeft(l.value)
         case .Right(let r): return onRight(r.value)
@@ -239,8 +239,8 @@ public enum Either<L,R> {
 }
 public enum ConsoleOperation<T> {
     case WriteLine (String, Box<T>)
-    case ReadLine (String -> T)
-    public func map<B>(f : T -> B) -> ConsoleOperation<B> {
+    case ReadLine ((String) -> T)
+    public func map<B>(_ f : @escaping (T) -> B) -> ConsoleOperation<B> {
         switch self {
         case .WriteLine(let (s, t)): return .WriteLine(s, Box(f(t.value)))
         case .ReadLine(let r): return .ReadLine( { s in f(r(s)) } )
@@ -253,31 +253,31 @@ public enum ConsoleOperation<T> {
 
 protocol ConsoleIO {
     func readStdIn() -> String;
-    func writeStdOut(s : String) -> ();
+    func writeStdOut(_ s : String) -> ();
 }
 
 class TestIO : ConsoleIO {
     var input : [String] = []
     var output : [String] = []
     
-    func addToStdIn(s : String) {
+    func addToStdIn(_ s : String) {
         self.input.append(s)
     }
     func readStdIn() -> String {
         if input.isEmpty {
             return ""
         } else {
-            return self.input.removeAtIndex(0)
+            return self.input.remove(at: 0)
         }
     }
     func allOutput() -> [String] { return self.output }
     func lastOutput() -> String? { return self.output.last }
-    func writeStdOut(s :String) {
+    func writeStdOut(_ s :String) {
         self.output.append(s)
     }
 }
 
-func interpret<T>(io : ConsoleIO, program : Console<T>) -> T {
+func interpret<T>(_ io : ConsoleIO, program : Console<T>) -> T {
     let op = program.getOp()
     switch op {
     case .Left(let l) : return l.value
