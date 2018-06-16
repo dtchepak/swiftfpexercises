@@ -33,7 +33,11 @@ extension Array {
     // *** TODO ***
     // Implement without using the built-in map function.
     func myMap<B>(_ f: (Element) -> B) -> [B] {
-        return []
+        var b : [B] = []
+        for i in self {
+            b.append(f(i))
+        }
+        return b
     }
 }
 
@@ -73,7 +77,12 @@ extension Optional {
     // *** TODO ***
     // Implement without using the built-in map function.
     func myMap<B>(_ f: (Wrapped) -> B) -> B? {
-        return .none
+        switch self {
+        case .some(let x):
+            return .some(f(x))
+        default:
+            return .none
+        }
     }
 }
 
@@ -120,7 +129,7 @@ class Ex01_3_UsingMap : XCTestCase {
     // *** TODO ***
     // Convert an optional string to uppercase using myMap (no pattern matching allowed)
     func toUpperOpt(_ s : String?) -> String? {
-        return .none
+        return s.myMap(toUpper)
     }
     
     func testToUpper() {
@@ -131,7 +140,7 @@ class Ex01_3_UsingMap : XCTestCase {
     // *** TODO ***
     // Convert a list of strings to uppercase using myMap (no explicit loops allowed)
     func toUpperArr(_ s : [String]) -> [String] {
-        return []
+        return s.myMap(toUpper)
     }
    
     func testToUpperArr() {
@@ -142,7 +151,7 @@ class Ex01_3_UsingMap : XCTestCase {
     // *** TODO ***
     // Check to see if an optional int is even (no pattern matching allowed). If the input is .none the output should also be .none.
     func isEvenOpt(_ i : Int?) -> Bool? {
-        return .none
+        return i.map { x in x % 2 == 0 }
     }
     
     func testIsEven() {
@@ -156,7 +165,9 @@ class Ex01_3_UsingMap : XCTestCase {
     // The functions toUpper, even and describeBool are provided in this class.
     // Use MULTIPLE calls to Optional.map
     func describeEven(_ i : Int?) -> String? {
-        return .none
+        return i.map(even)
+                .map(describeBool("Number even?"))
+                .map(toUpper)
     }
     
     func testDescribeEven() {
@@ -170,7 +181,7 @@ class Ex01_3_UsingMap : XCTestCase {
     // No pattern matching. Use a SINGLE call to Optional.map.
     // HINT: the second law for map functions will help here
     func describeEvenAgain(_ i : Int?) -> String? {
-        return .none
+        return i.map(toUpper ∘ describeBool("Number even?") ∘ even)
     }
 
     func testDescribeEvenAgain() {
@@ -196,7 +207,7 @@ func times10(_ x : Int) -> Int {
 }
 
 func .+.<A,B,C> (f : @escaping (B) -> C, g : @escaping (A) -> B) -> (A) -> C {
-    fatalError("not implemented")
+    return { a in f(g(a)) }
 }
 
 infix operator .+. : CompositionPrecedence // compose
