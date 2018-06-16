@@ -125,7 +125,7 @@ extension Parser {
     // Reminder: 
     //      enum ParseResult<A> { case ErrorResult(ParseError); case Result(Input,Box<A>) }
     // (watch out for the Box formality. This will no longer be required as of Swift 2)
-    public func map<B>(_ f : (A) -> B) -> Parser<B> {
+    public func map<B>(_ f : @escaping (A) -> B) -> Parser<B> {
         return TODO()
     }
 }
@@ -154,7 +154,7 @@ extension Parser {
     //
     //   * if this parser fails with an error the returned parser fails with that error.
     //
-    public func flatMap<B>(_ f : (A) -> Parser<B>) -> Parser<B> {
+    public func flatMap<B>(_ f : @escaping (A) -> Parser<B>) -> Parser<B> {
         return TODO()
     }
 }
@@ -835,9 +835,9 @@ public func ==(lhs: Person, rhs: Person) -> Bool {
 }
 
 // Custom Operators
-public func <^><A,B>(_ f : (A)->B, _ p: Parser<A>) -> Parser<B> {
+public func <^><A,B>(_ f : @escaping (A)->B, _ p: Parser<A>) -> Parser<B> {
     return p.map(f)
 }
-public func >>-<A,B>(_ p : Parser<A>, _ f : (A) -> Parser<B>) -> Parser<B> {
+public func >>-<A,B>(_ p : Parser<A>, _ f : @escaping (A) -> Parser<B>) -> Parser<B> {
     return p.flatMap(f)
 }
