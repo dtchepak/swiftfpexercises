@@ -14,6 +14,8 @@ Requires Swift 4+/Xcode 9.
 
 The SwiftFpExercisesTests folder in the project contains a number of exercises, starting with `Ex01_Map.swift`. The aim is to fill in all the TODO comments and calls with valid implementations. Each time a TODO is completed one or more of the tests should start passing. Once all the TODOs are gone and the tests are passing then move on to the next exercise.
 
+**NOTE:** Some tests in `Ex03_Result.swift` are commented out to prevent them interfering with earlier tests, so make sure you uncomment them to complete that exercise when you get up to it.
+
 Some of the exercises also contain one or more EXTENSION comments. These are additional tasks thrown in for fun⁕, usually quite abruptly and with very little guidance, for those who'd like to try something a bit different. While the main exercises are intended to be completed in order, the extensions can safely be skipped. 
 
 ⁕ YMMV :)

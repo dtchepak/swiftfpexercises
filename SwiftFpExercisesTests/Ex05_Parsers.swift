@@ -8,7 +8,6 @@ The goal is to work through this file replacing calls to TODO() with real implem
 each test to pass along the way.
 
 See FlatMapPattern.md for some context and tips.
-
 */
 import UIKit
 import XCTest

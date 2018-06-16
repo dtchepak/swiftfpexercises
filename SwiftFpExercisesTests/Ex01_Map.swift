@@ -14,8 +14,9 @@ Arrays and Optionals have valid map implementations:
     map : (A -> B) -> [A] -> [B]
     map : (A -> B) ->  A? ->  B?
 
-For this exercise we will implement our own versions of these functions (named "myMap" so it doesn't conflict with built-in functions).
-These are marked with "*** TODO ***".
+For this exercise we will implement and use our own versions of these functions (named "myMap" so they don't conflict with the
+built-in functions). Each task is marked with "*** TODO ***" comments. Run the tests after implementing each TODO and make
+sure the associated ones pass. (It's probably worth reading the tests as well to see the expected behaviour.)
 
 To be a valid map function an implementation must also obey two laws:
 
@@ -29,7 +30,8 @@ Functors are more general in Category Theory I think, but this is a useful defin
 */
 
 extension Array {
-    //*** TODO ***
+    // *** TODO ***
+    // Implement without using the built-in map function.
     func myMap<B>(_ f: (Element) -> B) -> [B] {
         return []
     }
@@ -68,7 +70,8 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
 }
 
 extension Optional {
-    //*** TODO ***
+    // *** TODO ***
+    // Implement without using the built-in map function.
     func myMap<B>(_ f: (Wrapped) -> B) -> B? {
         return .none
     }
@@ -114,8 +117,8 @@ class Ex01_3_UsingMap : XCTestCase {
     func describeBool(_ prefix: String) -> (Bool) -> String {
         return { b in "\(prefix) \(b)" } }
     
-    //*** TODO ***
-    //Convert an optional string to uppercase using myMap (no pattern matching allowed)
+    // *** TODO ***
+    // Convert an optional string to uppercase using myMap (no pattern matching allowed)
     func toUpperOpt(_ s : String?) -> String? {
         return .none
     }
@@ -125,8 +128,8 @@ class Ex01_3_UsingMap : XCTestCase {
         assertEqual(toUpperOpt(.none), expected: .none)
     }
     
-    //*** TODO ***
-    //Convert a list of strings to uppercase using myMap (no explicit loops allowed)
+    // *** TODO ***
+    // Convert a list of strings to uppercase using myMap (no explicit loops allowed)
     func toUpperArr(_ s : [String]) -> [String] {
         return []
     }
@@ -136,8 +139,8 @@ class Ex01_3_UsingMap : XCTestCase {
         assertEqual(toUpperArr([]), expected: [])
     }
     
-    //*** TODO ***
-    //Check to see if an optional int is even (no pattern matching allowed). If the input is .none the output should also be .none.
+    // *** TODO ***
+    // Check to see if an optional int is even (no pattern matching allowed). If the input is .none the output should also be .none.
     func isEvenOpt(_ i : Int?) -> Bool? {
         return .none
     }
@@ -148,10 +151,10 @@ class Ex01_3_UsingMap : XCTestCase {
         assertEqual(isEvenOpt(.none), expected: .none)
     }
     
-    //*** TODO ***
-    //Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
-    //The functions toUpper, even and describeBool are provided in this class.
-    //Use MULTIPLE calls to Optional.map
+    // *** TODO ***
+    // Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
+    // The functions toUpper, even and describeBool are provided in this class.
+    // Use MULTIPLE calls to Optional.map
     func describeEven(_ i : Int?) -> String? {
         return .none
     }
@@ -162,10 +165,10 @@ class Ex01_3_UsingMap : XCTestCase {
         assertEqual(describeEven(.none), expected: .none)
     }
     
-    //*** TODO ***
-    //Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
-    //Use a SINGLE call to Optional.map.
-    //HINT: the second law for map functions will help here
+    // *** TODO ***
+    // Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
+    // Use a SINGLE call to Optional.map.
+    // HINT: the second law for map functions will help here
     func describeEvenAgain(_ i : Int?) -> String? {
         return .none
     }

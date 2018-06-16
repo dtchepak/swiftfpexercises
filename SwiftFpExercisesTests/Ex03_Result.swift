@@ -9,7 +9,10 @@ EXERCISE
 Result represents the result of an operation that can fail with some Error E, or succeed with a Value of type A.
 See the `success` and `failure` functions for easy ways to create these values.
 
-Uncomment the code-block marked "TODO: Uncomment", then implement Result.map and Result.flatMap. ResultTests has some examples of how these can be used.
+Uncomment the code-block marked "TODO: Uncomment..." as prompted by `testUncommentTheCodeForThisExercise()`, then
+implement Result.map and Result.flatMap.
+ 
+ResultTests has some examples of how these functions can be used.
 */
 public enum Result<E,A> : CustomStringConvertible {
     case Error(E)
@@ -46,6 +49,15 @@ func success<E,A>(_ value : A) -> Result<E,A> {
 }
 func failure<E,A>(_ err : E) -> Result<E,A> {
     return .Error(err)
+}
+
+class Ex03_Result: XCTestCase {
+    func testUncommentTheCodeForThisExercise() {
+        let areTestsUncommented = false // *** TODO ***
+        XCTAssert(
+            areTestsUncommented,
+            "TODO: uncomment the block of code and tests in Ex03_Result.swift, then update areTestsUncommented in this test and continue Ex03.")
+    }
 }
 
 //// TODO: Uncomment the code below (to the end of the file) and get the tests to pass:
@@ -105,9 +117,9 @@ func failure<E,A>(_ err : E) -> Result<E,A> {
 //        XCTAssert(outOfRangeResult.getError() == .some("Expected between 0 and 10, but was 42"), outOfRangeResult.description)
 //    }
 //
-//    //*** TODO ***
-//    //Using testFlatMap() as an example, write a function that attempts to parse an even number between 0 and 100 from a string.
-//    //Consider writing a function `even : Int -> Result<String, Int>` to help.
+//    // *** TODO ***
+//    // Using testFlatMap() as an example, write a function that attempts to parse an even number between 0 and 100 from a string.
+//    // Consider writing a function `even : Int -> Result<String, Int>` to help.
 //    func evenFrom0To100(_ s : String) -> Result<String, Int> {
 //        return failure("*** TODO ***");
 //    }

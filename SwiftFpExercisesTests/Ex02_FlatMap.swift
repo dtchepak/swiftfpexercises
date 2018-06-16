@@ -14,15 +14,18 @@ Arrays and Optionals have valid flatMap implementations:
     flatMap : (A -> [B]) -> [A] -> [B]
     flatMap : (A ->  B?) ->  A? ->  B?
 
-For this exercise we will implement our own versions of these functions, marked with "*** TODO ***".
-
+For this exercise we will implement and use our own versions of these functions, marked with "*** TODO ***" comments.
+Run the tests after implementing each TODO and make sure the associated ones pass. (It's probably worth reading the tests
+as well to see the expected behaviour.)
+ 
 To be a valid flatMap function an implementation must obey three laws, but as with map, I normally summarise these as "valid implementations don't do weird stuff".
 For more info on the laws: https://en.wikibooks.org/wiki/Haskell/Understanding_monads#Monad_Laws
 
 */
 
 extension Array {
-    //*** TODO ***
+    // *** TODO ***
+    // Implement without using the built-in flatMap function.
     func flatMap<B>(_ f: (Element) -> [B]) -> [B] {
         return []
     }
@@ -45,8 +48,8 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
         }
     }
 
-    //*** TODO ***
-    //Get list of products. Use Array.flatMap, productsForDepartmentId
+    // *** TODO ***
+    // Get list of products. Use Array.flatMap, productsForDepartmentId
     func getProductsForDepartments(_ depts : [Int]) -> [String] {
         return []
     }
@@ -61,7 +64,8 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
 
 
 extension Optional {
-    //*** TODO ***
+    // *** TODO ***
+    // Implement without using the built-in flatMap function.
     func flatMap<B>(_ f: (Wrapped) -> B?) -> B? {
         return .none
     }
@@ -84,10 +88,10 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         }
     }
     
-    //*** TODO ***
-    //Convert s to .some number between 0 and 9, or return .none.
-    //HINT: - use testFlatMap as a template for your answer
-    //      - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
+    // *** TODO ***
+    // Convert s to .some number between 0 and 9, or return .none.
+    // HINT: - use testFlatMap as a template for your answer
+    //       - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
     func maybeSingleDigitNumber(_ s : String) -> Int? {
         return .none
     }
@@ -126,7 +130,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         assertEqual(getFontName(unstylishWidget), expected: .none)
     }
     
-    //*** TODO ***
+    // *** TODO ***
     // If widget has a style and font, return .some(true) if the font size is over 12, or .some(false) if less than or equal to 12.
     // If the widget has no style, or a style without a font specified, return .none.
     // HINT: Use getFontName as a template for your answer
@@ -144,7 +148,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
         assertEqual(hasFontLargerThan12(noFontWidget), expected: .none)
     }
     
-    //*** TODO ***
+    // *** TODO ***
     // Try to convert both first and second strings to integers (using str.toInt()).
     // If both conversions succeed, return the result of adding the two numbers. Otherwise return .none
     func maybeAdd(_ first : String, _ second : String) -> Int? {
@@ -171,7 +175,7 @@ Let's implement a unit function for Optional: given a value of type A, return an
 */
 
 extension Optional {
-    //*** TODO ***
+    // *** TODO ***
     static func unit<A>(_ x : A) -> A? {
         return .none
     }
@@ -197,8 +201,8 @@ EXTENSION:
 */
 
 extension Optional {
-    //*** TODO ***
-    //Use Optional.flatMap and Optional.unit
+    // *** TODO ***
+    // Use Optional.flatMap and Optional.unit
     func mapUsingFlatMap<B>(_ f : (Wrapped) -> B) -> B? {
         return .none
     }
