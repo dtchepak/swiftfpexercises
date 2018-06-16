@@ -1,5 +1,7 @@
 
-This is a collection of ad hoc exercises written to illustrate some FP concepts in Swift, which I've tried to assemble into something relatively cohesive.
+This is a collection of ad hoc exercises written to illustrate some FP concepts using Swift, which I've tried to assemble into something relatively cohesive.
+
+Note that the aim here is not idiomatic or even good Swift code! Instead we're focusing on language-independent concepts like `map` and `flatMap`. Hopefully this will help us with our real Swift code by showing us some common patterns for using lists, options, observables and other types that have `flatMap`.
 
 The original exercises were designed to be done with guidance from an instructor, so if you get stuck it is not your fault! Any time you run into an exercise that doesn't make sense from the context/comments alone or seems like too big a leap then please leave feedback via [Github Issues](https://github.com/dtchepak/swiftfpexercises/issues).
 
