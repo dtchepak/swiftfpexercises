@@ -191,7 +191,9 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // If both conversions succeed, return the result of adding the two numbers. Otherwise return .none
     // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
     func maybeAdd(_ first : String, _ second : String) -> Int? {
-        return .none
+        return Int(first).flatMap { f in
+            Int(second).map { s in f + s }
+        }
     }
     
     func testMaybeAdd() {
@@ -216,7 +218,7 @@ Let's implement a unit function for Array: given a value of type A, return an Ar
 extension Array {
     // *** TODO ***
     static func unit<A>(_ x : A) -> [A] {
-        return []
+        return [x]
     }
 }
 
@@ -238,7 +240,7 @@ Implement a unit function for Optional: given a value of type A, return a A? tha
 extension Optional {
     // *** TODO ***
     static func unit<A>(_ x : A) -> A? {
-        return .none
+        return x
     }
 }
 
@@ -267,7 +269,7 @@ extension Array {
     //
     // NOTE: No deprecation warnings or Array.concatMap allowed!
     func mapUsingFlatMap<B>(_ f : (Element) -> B) -> [B] {
-        return []
+        return flatMap { Array.unit(f($0)) }
     }
 }
 
@@ -278,7 +280,7 @@ extension Optional {
     // NOTE: Swift auto-casts B to B?. If you ignore this and explicitly use Optional.unit instead, you should see
     // a nice comparison to your Array.mapUsingFlatMap implementation.
     func mapUsingFlatMap<B>(_ f : (Wrapped) -> B) -> B? {
-        return .none
+        return flatMap { Optional.unit(f($0)) }
     }
 }
 
