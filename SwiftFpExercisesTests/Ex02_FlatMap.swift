@@ -90,6 +90,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     
     // *** TODO ***
     // Convert s to .some number between 0 and 9, or return .none.
+    // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
     // HINT: - use testFlatMap as a template for your answer
     //       - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
     func maybeSingleDigitNumber(_ s : String) -> Int? {
@@ -134,6 +135,9 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // *** TODO ***
     // If widget has a style and font, return .some(true) if the font size is over 12, or .some(false) if less than or equal to 12.
     // If the widget has no style, or a style without a font specified, return .none.
+    //
+    // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
+    //
     // HINT: Use getFontName as a template for your answer
     func hasFontLargerThan12(_ widget : Widget) -> Bool? {
         return .none
@@ -152,6 +156,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // *** TODO ***
     // Try to convert both first and second strings to integers (using str.toInt()).
     // If both conversions succeed, return the result of adding the two numbers. Otherwise return .none
+    // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
     func maybeAdd(_ first : String, _ second : String) -> Int? {
         return .none
     }
