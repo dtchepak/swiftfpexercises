@@ -177,7 +177,29 @@ If we have a valid flatMap function for some M, and we also have a function:
 Then Ivory Tower-types say "M is a monad" (or "there is a monad instance for M").
 To say "M is a monad" is to say the type M has flatMap and unit.
 
-Let's implement a unit function for Optional: given a value of type A, return an Optional<A> that passes the test case.
+Let's implement a unit function for Array: given a value of type A, return an Array<A> that passes the test case.
+*/
+
+extension Array {
+    // *** TODO ***
+    static func unit<A>(_ x : A) -> [A] {
+        return []
+    }
+}
+
+class Ex02_3_ArrayUnit : XCTestCase {
+    func testUnitExamples() {
+        let result = Array<Int>.unit(42)
+        let result2 = Array<String>.unit("hello")
+        
+        XCTAssert(result == [42], String(describing: result))
+        XCTAssert(result2 == ["hello"], String(describing: result2))
+    }
+}
+
+/*
+Optionals also have flatMap and unit.
+Implement a unit function for Optional: given a value of type A, return a A? that passes the test case.
 */
 
 extension Optional {
@@ -187,60 +209,101 @@ extension Optional {
     }
 }
 
-class Ex02_3_OptionalUnit : XCTestCase {
+class Ex02_4_OptionalUnit : XCTestCase {
     func testUnitExamples() {
         let result = Optional<Int>.unit(42)
         let result2 = Optional<String>.unit("hello")
-
+        
         XCTAssert(result == .some(42), String(describing: result))
         XCTAssert(result2 == .some("hello"), String(describing: result2))
     }
 }
 
+
 /*
 Anything that has flatMap and a unit function also has a map function. In other words, all monads are also functors.
 
-Demonstrate this by implementing Optional.mapUsingFlatMap using Optional.flatMap and Optional.unit.
-
-EXTENSION:
-    - prove that Optional.map and Optional.mapUsingFlatMap are equivalent.
+Demonstrate this by implementing:
+ -  Array.mapUsingFlatMap using only Array.flatMap and Array.unit.
+ -  Optional.mapUsingFlatMap using only Optional.flatMap and Optional.unit.
 */
+
+extension Array {
+    // *** TODO ***
+    // Use Array.flatMap and Array.unit.
+    func mapUsingFlatMap<B>(_ f : (Element) -> B) -> [B] {
+        return []
+    }
+}
 
 extension Optional {
     // *** TODO ***
     // Use Optional.flatMap and Optional.unit
+    //
+    // NOTE: Swift auto-casts B to B?. If you ignore this and explicitly use Optional.unit instead, you should see
+    // a nice comparison to your Array.mapUsingFlatMap implementation.
     func mapUsingFlatMap<B>(_ f : (Wrapped) -> B) -> B? {
         return .none
     }
 }
 
-class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
-    func testMapEmpty() {
+class Ex02_5_Map_FlatMap_Relationship: XCTestCase {
+    func testMapEmptyArray() {
+        let a : [Int] = []
+        let result = a.mapUsingFlatMap(plus1)
+        
+        XCTAssert(result == [], String(describing: result))
+    }
+    
+    func testMapPlus1Array() {
+        let a = [41, 10, 102]
+        let result = a.mapUsingFlatMap(plus1)
+        
+        XCTAssert(result == [42, 11, 103], String(describing: result))
+    }
+    
+    func testExampleOfFirstLawArray() {
+        let empty : [Int] = []
+        let x : [Int] = [42, 11, 103]
+        
+        assertEqual(x.mapUsingFlatMap { $0 }, expected: x)
+        assertEqual(empty.mapUsingFlatMap { $0 }, expected: empty)
+    }
+    
+    func testExampleOfSecondLawArray() {
+        let empty : [Int] = []
+        let x = [42, 11, 103]
+        
+        assertEqual( x.mapUsingFlatMap(times10 ∘ plus1), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( empty.mapUsingFlatMap(times10 ∘ plus1), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+    }
+
+    func testMapEmptyOptional() {
         let a : Int? = nil
         let result = a.mapUsingFlatMap(plus1)
 
         XCTAssert(result == nil, String(describing: result))
     }
 
-    func testMapPlus1() {
+    func testMapPlus1Optional() {
         let a = Optional.some(41)
         let result = a.mapUsingFlatMap(plus1)
-
+        
         XCTAssert(result == .some(42), String(describing: result))
     }
 
-    func testExampleOfFirstLaw() {
+    func testExampleOfFirstLawOptional() {
         let empty : Int? = .none
         let x : Int? = .some(42)
-
+        
         assertEqual(x.mapUsingFlatMap { $0 }, expected: x)
         assertEqual(empty.mapUsingFlatMap { $0 }, expected: empty)
     }
 
-    func testExampleOfSecondLaw() {
+    func testExampleOfSecondLawOptional() {
         let empty : Int? = nil
         let x = Optional.some(42)
-
+        
         assertEqual( x.mapUsingFlatMap(times10 ∘ plus1), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
         assertEqual( empty.mapUsingFlatMap(times10 ∘ plus1), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
     }
