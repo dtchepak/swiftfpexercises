@@ -231,6 +231,8 @@ Demonstrate this by implementing:
 extension Array {
     // *** TODO ***
     // Use Array.flatMap and Array.unit.
+    //
+    // NOTE: No deprecation warnings or Array.concatMap allowed!
     func mapUsingFlatMap<B>(_ f : (Element) -> B) -> [B] {
         return []
     }
