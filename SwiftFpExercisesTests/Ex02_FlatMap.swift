@@ -27,7 +27,9 @@ extension Array {
     // *** TODO ***
     // Implement without using the built-in flatMap function.
     func flatMap<B>(_ f: (Element) -> [B]) -> [B] {
-        return []
+        return self.myMap(f)
+                   .reduceRight(defaultValue: [],
+                                combine: { (acc, element) -> [B] in acc + element })
     }
 }
 
@@ -51,7 +53,7 @@ class Ex02_1_ArrayFlatMapExamples : XCTestCase {
     // *** TODO ***
     // Get list of products. Use Array.flatMap, productsForDepartmentId
     func getProductsForDepartments(_ depts : [Int]) -> [String] {
-        return []
+        return depts.flatMap { dept in productsForDepartmentId(dept) }
     }
     
     func testGetProductsForDepartments() {
@@ -67,7 +69,10 @@ extension Optional {
     // *** TODO ***
     // Implement without using the built-in flatMap function.
     func flatMap<B>(_ f: (Wrapped) -> B?) -> B? {
-        return .none
+        switch (self) {
+        case .none: return .none
+        case .some(let x): return f(x)
+        }
     }
 }
 
@@ -94,7 +99,7 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     // HINT: - use testFlatMap as a template for your answer
     //       - ensureBetween(x, inclusiveEnd: y) will return a function of type Int -> Int?.
     func maybeSingleDigitNumber(_ s : String) -> Int? {
-        return .none
+        return Int(s).flatMap(ensureBetween(start: 0, inclusiveEnd: 9))
     }
     
     func testMaybeSingleDigitNumber() {
@@ -122,8 +127,8 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     func getFontName(_ contraption : Contraption) -> String? {
         return contraption.widget.flatMap { widget in
             widget.style.flatMap { s in
-                s.font.flatMap { font in
-                    .some(font.name)
+                s.font.map { font in
+                    font.name
                 }}}
     }
     // EXTENSION: replace `s.font.flatMap { ... }` with a call to `s.font.map { ... }` in the `getFontName` code above.
@@ -164,7 +169,11 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     //
     // HINT: Use getFontName as a template for your answer
     func hasFontLargerThan12(_ contraption : Contraption) -> Bool? {
-        return .none
+        return contraption.widget.flatMap { widget in
+            widget.style.flatMap { style in
+            style.font.map {
+                font in font.size > 12
+                }}}
     }
     
     func testFontSizeCheck() {
