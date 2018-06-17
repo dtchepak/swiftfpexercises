@@ -20,8 +20,8 @@ sure the associated ones pass. (It's probably worth reading the tests as well to
 
 To be a valid map function an implementation must also obey two laws:
 
-1.  x.map({$0})       = x                       ( map id = id )
-2.  x.map({p(q($0))}) = x.map(q).map(p)         ( map (p ∘ q) = map p ∘ map q )
+1.  x.map { $0 }       = x                       ( map id = id )
+2.  x.map { p(q($0)) } = x.map(q).map(p)         ( map (p ∘ q) = map p ∘ map q )
 
 I normally summarise these laws as "valid implementations don't do weird stuff".
 
@@ -55,8 +55,8 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let empty : [Int] = []
         let x = [1,2,3]
         
-        assertEqual(x.myMap({$0}), expected: x)
-        assertEqual(empty.myMap({$0}), expected: empty)
+        assertEqual(x.myMap { $0 }, expected: x)
+        assertEqual(empty.myMap { $0 }, expected: empty)
     }
     
     
@@ -64,8 +64,8 @@ class Ex01_1_ArrayMapExamples: XCTestCase {
         let empty : [Int] = []
         let x = [1,2,3]
         
-        assertEqual(x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
-        assertEqual(empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
+        assertEqual(x.myMap { times10(plus1($0)) }, expected: x.myMap(plus1).myMap(times10) )
+        assertEqual(empty.myMap { times10(plus1($0)) }, expected: empty.myMap(plus1).myMap(times10) )
     }
 }
 
@@ -97,8 +97,8 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
         let empty : Int? = .none
         let x : Int? = .some(42)
         
-        assertEqual(x.myMap({$0}), expected: x)
-        assertEqual(empty.myMap({$0}), expected: empty)
+        assertEqual(x.myMap { $0 }, expected: x)
+        assertEqual(empty.myMap { $0 }, expected: empty)
     }
     
     
@@ -106,8 +106,8 @@ class Ex01_2_OptionalMapExamples: XCTestCase {
         let empty : Int? = nil
         let x = Optional.some(42)
         
-        assertEqual( x.myMap({ times10(plus1($0)) }), expected: x.myMap(plus1).myMap(times10) )
-        assertEqual( empty.myMap({ times10(plus1($0)) }), expected: empty.myMap(plus1).myMap(times10) )
+        assertEqual( x.myMap { times10(plus1($0)) } , expected: x.myMap(plus1).myMap(times10) )
+        assertEqual( empty.myMap { times10(plus1($0)) }, expected: empty.myMap(plus1).myMap(times10) )
     }
 }
 

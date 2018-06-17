@@ -116,10 +116,11 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     
     // Example: using flatmap to chain together multiple calls that can return .none.
     func getFontName(_ widget : Widget) -> String? {
-        return widget.style.flatMap( {
-                 s in s.font.flatMap( {
-                   font in .some(font.name) } )
-        })
+        return widget.style.flatMap { s in
+            s.font.flatMap { font in
+                .some(font.name)
+            }
+        }
     }
     
     func testGetFontNameFromWidget() {
@@ -227,15 +228,15 @@ class Ex02_4_Map_FlatMap_Relationship: XCTestCase {
         let empty : Int? = .none
         let x : Int? = .some(42)
 
-        assertEqual(x.mapUsingFlatMap({$0}), expected: x)
-        assertEqual(empty.mapUsingFlatMap({$0}), expected: empty)
+        assertEqual(x.mapUsingFlatMap { $0 }, expected: x)
+        assertEqual(empty.mapUsingFlatMap { $0 }, expected: empty)
     }
 
     func testExampleOfSecondLaw() {
         let empty : Int? = nil
         let x = Optional.some(42)
 
-        assertEqual( x.mapUsingFlatMap({ times10(plus1($0)) }), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
-        assertEqual( empty.mapUsingFlatMap({ times10(plus1($0)) }), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( x.mapUsingFlatMap(times10 ∘ plus1), expected: x.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
+        assertEqual( empty.mapUsingFlatMap(times10 ∘ plus1), expected: empty.mapUsingFlatMap(plus1).mapUsingFlatMap(times10) )
     }
 }

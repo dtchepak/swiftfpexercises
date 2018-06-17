@@ -93,7 +93,7 @@ class Ex03_Result: XCTestCase {
 //        }
 //    }
 //
-//    func between(min : Int, max :Int) -> (Int) -> Result<String, Int> {
+//    func between(min : Int, max : Int) -> (Int) -> Result<String, Int> {
 //        return { x in
 //            if x >= min && x <= max {
 //                return success(x)

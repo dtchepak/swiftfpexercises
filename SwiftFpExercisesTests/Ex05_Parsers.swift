@@ -160,10 +160,10 @@ extension Parser {
 
 class Ex05_05_FlatMapParserExamples : XCTestCase {
     let skipOneX : Parser<Character> =
-    character().flatMap({ c in
+    character().flatMap { c in
         if c == "x" { return character() } // if c=="x", skip this character and parse the next one
         else { return valueParser(c) }     // else return this character
-    })
+    }
     func testFlatMap() {
         let result = skipOneX.parse("abcd")
         assertEqual(result, expected: succeed(remainingInput: "bcd", value: "a"))
