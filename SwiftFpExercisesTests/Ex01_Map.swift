@@ -21,7 +21,7 @@ sure the associated ones pass. (It's probably worth reading the tests as well to
 To be a valid map function an implementation must also obey two laws:
 
 1.  x.map({$0})       = x                       ( map id = id )
-2.  x.map({p(q($0))}) = x.map(q).map(p)         ( map (p . q) = map p . map q )
+2.  x.map({p(q($0))}) = x.map(q).map(p)         ( map (p ∘ q) = map p ∘ map q )
 
 I normally summarise these laws as "valid implementations don't do weird stuff".
 
@@ -166,8 +166,8 @@ class Ex01_3_UsingMap : XCTestCase {
     }
     
     // *** TODO ***
-    // Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none. No pattern matching.
-    // Use a SINGLE call to Optional.map.
+    // Take an optional int, then describe it as .some("NUMBER EVEN? TRUE"), .some("NUMBER EVEN? FALSE"), or .none.
+    // No pattern matching. Use a SINGLE call to Optional.map.
     // HINT: the second law for map functions will help here
     func describeEvenAgain(_ i : Int?) -> String? {
         return .none
@@ -178,6 +178,11 @@ class Ex01_3_UsingMap : XCTestCase {
         assertEqual(describeEvenAgain(.some(3)), expected: .some("NUMBER EVEN? FALSE"))
         assertEqual(describeEvenAgain(.none), expected: .none)
     }
+
+    // EXTENSION:
+    // - Write a compose operator of type `(B -> C) -> (A -> B) -> (A -> C)`.
+    //   You can use the `.+.` operator stub declared below in "Helper functions" to get you started.
+    // - Re-write `describeEvenAgain()` using your compose operator to build up the function passed to map.
 }
 
 ///////////////////////////////
@@ -188,6 +193,16 @@ func plus1(_ x : Int) -> Int {
 }
 func times10(_ x : Int) -> Int {
     return x*10
+}
+
+func .+.<A,B,C> (f : @escaping (B) -> C, g : @escaping (A) -> B) -> (A) -> C {
+    fatalError("not implemented")
+}
+
+infix operator .+. : CompositionPrecedence // compose
+
+precedencegroup ComposePrecedence {
+    associativity: right
 }
 
 // Assertion helpers

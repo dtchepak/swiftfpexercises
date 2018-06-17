@@ -25,12 +25,12 @@ precedencegroup KleisliCompositionPrecedence {
     higherThan: FunctionArrowPrecedence
 }
 
-infix operator • : CompositionPrecedence // compose
+infix operator ∘ : CompositionPrecedence // compose
 
 precedencegroup CompositionPrecedence {
     associativity: right
 }
 
-public func •<A,B,C> (f : @escaping (B)->C, g : @escaping (A)->B) -> (A) -> C {
+public func ∘<A,B,C> (f : @escaping (B)->C, g : @escaping (A)->B) -> (A) -> C {
     return  { (x : A) in f(g(x)) }
 }
