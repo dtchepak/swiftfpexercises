@@ -23,12 +23,13 @@ import XCTest
 //
 // We can create instances of Console<T> programs using the following functions:
 
-// Return a program that reads a line from the console and produces a string
-public func readLine() -> Console<String> {
+// Return a program that reads a line from the console and produces a string.
+// NOTE: named `readL͟n`, not `readL͟i͟n͟e`, to avoid conflicts with Swift's built-in readLine function.
+public func readLn() -> Console<String> {
     return ConsoleOperation<String>.ReadLine({ s in s }).toConsole()
 }
 // Return a program that writes a line to the console
-public func writeLine(_ s : String) -> Console<()> {
+public func writeLn(_ s : String) -> Console<()> {
     return ConsoleOperation<()>.WriteLine(s, Box(())).toConsole()
 }
 // Return a program that produces the given value
@@ -55,7 +56,7 @@ class Ex04_Console : XCTestCase {
     // Set the `program` variable using one of the creation functions above.
     func testHelloWorld() {
         let io = TestIO()
-        
+
         // <TODO>
         let program : Console<()> = noop()
         // </TODO>
@@ -165,7 +166,7 @@ class Ex04_Console : XCTestCase {
     // - reads an integer from stdin after prompting "Enter Y:"
     // - writes the result to stdout
     //
-    // HINT: use `readInt`, `flatMap` and `writeLine`
+    // HINT: use `readInt`, `flatMap` and `writeLn`
     func testCalculator() {
         let enteredX = Int(arc4random_uniform(100))
         let enteredY = Int(arc4random_uniform(100))
