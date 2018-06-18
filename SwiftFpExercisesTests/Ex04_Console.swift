@@ -126,7 +126,7 @@ class Ex04_Console : XCTestCase {
     //
     // HINTS:
     // - Use `prompt` to prompt and get the string entered (remember, it will write a prompt AND read the response)
-    // - Use `s.toInt()` to attempt to convert the string `s` to an `Int` (returns an `Optional<Int>`)
+    // - Use `Int(s)` to attempt to convert the string `s` to an `Int` (returns an `Optional<Int>`)
     // - You can call `self.readInt` recursively
     // - `pure(x)` will return a Console program that produces the value `x`
     func readInt(_ promptMsg : String) -> Console<Int> {
