@@ -273,7 +273,7 @@ class Ex05_08_ListParserExamples : XCTestCase {
 //   * The character does not satisfy the given predicate.
 //
 // Hint: The flatMap, valueParser, unexpectedCharParser and character functions will be helpful here.
-public func satisfy(_ p : (Character) -> Bool) -> Parser<Character> {
+public func satisfy(_ predicate : @escaping (Character) -> Bool) -> Parser<Character> {
     return TODO()
 }
 class Ex05_09_SatisfyParserExamples : XCTestCase {
@@ -735,7 +735,7 @@ class Ex23_PersonParserExamples : XCTestCase {
 public func <*><A,B>(f : Parser<(A)->B>, p: Parser<A>) -> Parser<B> {
     return TODO()
 }
-// - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <*> and cons2 (curried cons function)
+// - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <*> and consC (curried cons function)
 // - implement personParser using the apply operator and a curried Person constructor
 
 // END EXERCISES
@@ -771,10 +771,12 @@ func charIsInSet(_ cset : CharacterSet) -> (Character) -> Bool {
         return false
         }
 }
+/** Construct a list from a head and a tail. */
 func cons<A>(_ a :A, _ aa:[A]) -> [A] {
     return [a] + aa
 }
-func cons2<A>(_ a :A)-> ([A]) -> [A] {
+/** Curried version of cons */
+func consC<A>(_ a :A)-> ([A]) -> [A] {
     return { aa in [a] + aa }
 }
 extension Array {
