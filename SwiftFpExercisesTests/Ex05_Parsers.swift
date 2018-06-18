@@ -32,11 +32,11 @@ public enum ParseError : CustomStringConvertible, Equatable {
 
 public enum ParseResult<A> : CustomStringConvertible {
     case ErrorResult(ParseError)
-    case Result(Input,Box<A>)
+    case Result(Input, A)
     public var description : String {
         switch self {
         case .ErrorResult(let p) : return p.description
-        case .Result(let i, let a): return "Result >\(i)<, \(a.value)"
+        case .Result(let i, let a): return "Result >\(i)<, \(a)"
         }
     }
     public func isError() -> Bool {
@@ -48,7 +48,7 @@ public enum ParseResult<A> : CustomStringConvertible {
 }
 
 // Convenience functions for creating ParseResult<A> values.
-public func succeed<A>(remainingInput : Input, value : A) -> ParseResult<A> { return .Result(remainingInput, Box(value)) }
+public func succeed<A>(remainingInput : Input, value : A) -> ParseResult<A> { return .Result(remainingInput, value) }
 public func failWithUnexpectedEof<A>() -> ParseResult<A> { return .ErrorResult(.UnexpectedEof) }
 public func failWithExpectedEof<A>(_ i : Input) -> ParseResult<A> { return .ErrorResult(.ExpectedEof(i)) }
 public func failWithUnexpectedChar<A>(_ c : Character) -> ParseResult<A> { return .ErrorResult(.UnexpectedChar(c)) }
@@ -122,8 +122,7 @@ extension Parser {
     // Return a parser that maps any succeeding result with the given function.
     // Hint: will require the construction of a `Parser<B>` and pattern matching on the result of `self.parse`.
     // Reminder: 
-    //      enum ParseResult<A> { case ErrorResult(ParseError); case Result(Input,Box<A>) }
-    // (watch out for the Box formality. This will no longer be required as of Swift 2)
+    //      enum ParseResult<A> { case ErrorResult(ParseError); case Result(Input, A) }
     public func map<B>(_ f : @escaping (A) -> B) -> Parser<B> {
         return TODO()
     }
@@ -814,14 +813,14 @@ public func ==(lhs: ParseError, rhs: ParseError) -> Bool {
 public func ==<A: Equatable>(lhs: ParseResult<A>, rhs: ParseResult<A>) -> Bool {
     switch (lhs, rhs) {
     case (.ErrorResult(let e1), .ErrorResult(let e2)): return e1 == e2
-    case (.Result(let i1, let a1), .Result(let i2, let a2)): return i1 == i2 && a1.value == a2.value
+    case (.Result(let i1, let a1), .Result(let i2, let a2)): return i1 == i2 && a1 == a2
     default: return false
     }
 }
 public func ==<A: Equatable>(lhs: ParseResult<[A]>, rhs: ParseResult<[A]>) -> Bool {
     switch (lhs, rhs) {
     case (.ErrorResult(let e1), .ErrorResult(let e2)): return e1 == e2
-    case (.Result(let i1, let a1), .Result(let i2, let a2)): return i1 == i2 && a1.value == a2.value
+    case (.Result(let i1, let a1), .Result(let i2, let a2)): return i1 == i2 && a1 == a2
     default: return false
     }
 }
