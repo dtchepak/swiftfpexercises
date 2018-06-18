@@ -58,7 +58,7 @@ class Ex04_Console : XCTestCase {
         let io = TestIO()
 
         // <TODO>
-        let program : Console<()> = noop()
+        let program : Console<()> = writeLn("Hello World!")
         // </TODO>
         
         interpret(io, program: program)
@@ -72,7 +72,7 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn("monads are yucky")
         
         // <TODO>
-        let program : Console<String> = pure("TODO")
+        let program : Console<String> = readLn()
         // </TODO>
         
         let result = interpret(io, program: program)
@@ -88,7 +88,7 @@ class Ex04_Console : XCTestCase {
     // The types of these functions are shown in the comment at the top of this file.
     func prompt(_ message :String) -> Console<String> {
         // <TODO>
-        return pure("TODO")
+        return writeLn(message).then(readLn())
         // </TODO>
     }
     
@@ -111,7 +111,7 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn("to learn monads")
         
         // <TODO>
-        let program = noop()
+        let program = prompt(question).flatMap { writeLn($0) }
         // </TODO>
         
         interpret(io, program: program)
@@ -131,7 +131,12 @@ class Ex04_Console : XCTestCase {
     // - `pure(x)` will return a Console program that produces the value `x`
     func readInt(_ promptMsg : String) -> Console<Int> {
         // <TODO>
-        return pure(-1)
+        return prompt(promptMsg).flatMap { s in
+            switch Int(s) {
+            case .none: return writeLn("Invalid int").then(self.readInt(promptMsg))
+            case .some(let i): return pure(i)
+            }
+        }
         // </TODO>
     }
     
@@ -177,7 +182,12 @@ class Ex04_Console : XCTestCase {
         io.addToStdIn(enteredY.description)
         
         // <TODO>
-        let program : Console<()> = noop()
+        let program : Console<()> =
+            readInt("Enter X:").flatMap { x in
+                self.readInt("Enter Y:").flatMap { y in
+                    writeLn(String(x + y))
+                }
+        }
         // </TODO>
         
         interpret(io, program: program)
