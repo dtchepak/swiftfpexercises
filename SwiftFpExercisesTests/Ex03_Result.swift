@@ -118,8 +118,11 @@ class Ex03_Result: XCTestCase {
 //    }
 //
 //    // *** TODO ***
-//    // Using testFlatMap() as an example, write a function that attempts to parse an even number between 0 and 100 from a string.
-//    // Consider writing a function `even : Int -> Result<String, Int>` to help.
+//    // Write a function that attempts to parse an even number between 0 and 100 from a string. It should pass `testEvenFrom0To100()`.
+//    // HINTS:
+//    // - Use parseIntBetweenZeroAndTen() as an example to help you get started.
+//    // - Consider writing a helper function `even : Int -> Result<String, Int>`. For odd numbers this should report a `failure()` with
+//    //   the message expected by `testEvenFrom0To100`.
 //    func evenFrom0To100(_ s : String) -> Result<String, Int> {
 //        return failure("*** TODO ***");
 //    }
