@@ -491,8 +491,15 @@ class Ex05_15_LowerUpperAlphaExamples : XCTestCase {
 // Hint: - Use flatMap, valueParser and Array.reduceRight.
 //       - There is a `cons : (A, [A]) -> [A]` helper function if that helps.
 public func sequenceParser<A>(_ pp : [Parser<A>]) -> Parser<[A]> {
+    // Sample answer:
+    /*
     return pp.reduceRight(defaultValue: valueParser([]), combine: { (parser, acc) in
         parser.flatMap { p in acc.map(consC(p)) }
+    })
+    */
+    // Sample extension answer:
+    return pp.reduceRight(defaultValue: valueParser([]), combine: {(p, acc) in
+        consC <^> p <*> acc
     })
 }
 
@@ -718,13 +725,34 @@ class Ex22_PhoneParserExamples : XCTestCase {
 //          smokerParser,
 //          phoneParser.
 public func personParser() -> Parser<Person> {
+    // Sample answer:
+    /*
     return ageParser().flatMap { age in
         (spaces() >>> firstNameParser()).flatMap { first in
         (spaces() >>> surnameParser()).flatMap { surname in
         (spaces() >>> smokerParser()).flatMap { smokes in
         (spaces() >>> phoneParser()).flatMap { phone in
             valueParser(Person(age: age, firstName: first, surname: surname, smoker: smokes, phone: phone))
-        }}}}}
+            }}}}
+    }
+    */
+    
+    // Sample extension answer:
+    return createPerson
+                 <^> ageParser()
+                 <*> (spaces() >>> firstNameParser())
+                 <*> (spaces() >>> surnameParser())
+                 <*> (spaces() >>> smokerParser())
+                 <*> (spaces() >>> phoneParser())
+}
+
+func createPerson(_ age: Int) -> (String) -> (String) -> (Bool) -> (String) -> Person {
+    return { firstName in {
+             surname in {
+             smoker in {
+                phone in Person(age: age, firstName: firstName, surname: surname, smoker: smoker, phone: phone)
+            }}}
+    }
 }
 
 class Ex23_PersonParserExamples : XCTestCase {
@@ -776,7 +804,9 @@ class Ex23_PersonParserExamples : XCTestCase {
 // EXTENSIONS
 // - implement apply operator <*>
 public func <*><A,B>(f : Parser<(A)->B>, p: Parser<A>) -> Parser<B> {
-    return TODO()
+    return f.flatMap { ff in
+        p.map{ ff($0) }
+    }
 }
 // - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <^> (alias for map), <*> and consC (curried cons function)
 // - implement personParser using the apply operator and a curried Person constructor
