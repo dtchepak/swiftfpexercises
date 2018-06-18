@@ -735,7 +735,7 @@ class Ex23_PersonParserExamples : XCTestCase {
 public func <*><A,B>(f : Parser<(A)->B>, p: Parser<A>) -> Parser<B> {
     return TODO()
 }
-// - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <*> and consC (curried cons function)
+// - implement sequenceParser using the apply operator <*>. Use reduceRight, valueParser, <^> (alias for map), <*> and consC (curried cons function)
 // - implement personParser using the apply operator and a curried Person constructor
 
 // END EXERCISES
