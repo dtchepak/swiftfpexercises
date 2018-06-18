@@ -217,7 +217,7 @@ public class Console<T> {
     }
     
     // Ignore this operation's output and use the next operation.
-    public func then<B>(next : Console<B>) -> Console<B> {
+    public func then<B>(_ next : Console<B>) -> Console<B> {
         return self.flatMap({ _ in next })
     }
     
