@@ -114,47 +114,71 @@ class Ex02_2_OptionalFlatMapExamples: XCTestCase {
     struct Widget {
         let style : Style?
     }
-    
-    // Example: using flatmap to chain together multiple calls that can return .none.
-    func getFontName(_ widget : Widget) -> String? {
-        return widget.style.flatMap { s in
-            s.font.flatMap { font in
-                .some(font.name)
-            }
-        }
+    struct Contraption {
+        let widget : Widget?
     }
     
-    func testGetFontNameFromWidget() {
-        let widget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
-        let unstylishWidget = Widget(style: Style(font: nil))
+    // Example: using flatmap to chain together multiple calls that can return .none.
+    func getFontName(_ contraption : Contraption) -> String? {
+        return contraption.widget.flatMap { widget in
+            widget.style.flatMap { s in
+                s.font.flatMap { font in
+                    .some(font.name)
+                }}}
+    }
+    // EXTENSION: replace `s.font.flatMap { ... }` with a call to `s.font.map { ... }` in the `getFontName` code above.
 
-        assertEqual(getFontName(widget), expected: .some("Helvetica"))
-        assertEqual(getFontName(unstylishWidget), expected: .none)
+    func testGetFontNameFromContraption() {
+        let contraption = Contraption(widget: Widget(style: Style(font: Font(name: "Helvetica", size: 12))))
+        let unstylishContraption = Contraption(widget: Widget(style: Style(font: nil)))
+
+        assertEqual(getFontName(contraption), expected: .some("Helvetica"))
+        assertEqual(getFontName(unstylishContraption), expected: .none)
+    }
+
+    // Example: for Swift Optionals we can also use optional chaining with `?.`.
+    func getFontNameChained(_ contraption : Contraption) -> String? {
+        return contraption.widget?.style?.font?.name
+    }
+    // For cases like `getFontName` this can be a lot neater than flatMap, but flatMap can do extra things that `?.` can't:
+    //
+    // - with flatMap we can make a decision at each point in the chain (which we'll do in the hasFontLargerThan12 example below)
+    // - we can use flatMap with lot more types than just Optional
+    // - we can implement flatMap for our own types — we do not need a special case built into the compiler.
+    //
+    // We'll avoid using `?.` for the rest of these exercises, but it is worth noting that `getFontNameChained` and `getFontName`
+    // are logically equivalent.
+    func testGetFontNameChainedAndFlatMapped() {
+        let contraption = Contraption(widget: Widget(style: Style(font: Font(name: "Helvetica", size: 12))))
+        let unstylishContraption = Contraption(widget: Widget(style: Style(font: nil)))
+
+        assertEqual(getFontName(contraption), expected: getFontNameChained(contraption))
+        assertEqual(getFontName(unstylishContraption), expected: getFontNameChained(unstylishContraption))
     }
     
     // *** TODO ***
-    // If widget has a style and font, return .some(true) if the font size is over 12, or .some(false) if less than or equal to 12.
+    // If contraption has a widget, style and font, return .some(true) if the font size is over 12, or .some(false) if less than or equal to 12.
     // If the widget has no style, or a style without a font specified, return .none.
     //
     // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
     //
     // HINT: Use getFontName as a template for your answer
-    func hasFontLargerThan12(_ widget : Widget) -> Bool? {
+    func hasFontLargerThan12(_ contraption : Contraption) -> Bool? {
         return .none
     }
     
     func testFontSizeCheck() {
-        let smallFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 12)))
-        let largeFontWidget = Widget(style: Style(font: Font(name: "Helvetica", size: 42)))
-        let noFontWidget = Widget(style: Style(font: nil))
+        let smallFontContraption = Contraption(widget: Widget(style: Style(font: Font(name: "Helvetica", size: 12))))
+        let largeFontContraption = Contraption(widget: Widget(style: Style(font: Font(name: "Helvetica", size: 42))))
+        let noFontContraption = Contraption(widget: Widget(style: Style(font: nil)))
         
-        assertEqual(hasFontLargerThan12(smallFontWidget), expected: .some(false))
-        assertEqual(hasFontLargerThan12(largeFontWidget), expected: .some(true))
-        assertEqual(hasFontLargerThan12(noFontWidget), expected: .none)
+        assertEqual(hasFontLargerThan12(smallFontContraption), expected: .some(false))
+        assertEqual(hasFontLargerThan12(largeFontContraption), expected: .some(true))
+        assertEqual(hasFontLargerThan12(noFontContraption), expected: .none)
     }
     
     // *** TODO ***
-    // Try to convert both first and second strings to integers (using str.toInt()).
+    // Try to convert both first and second strings to integers (using `Int(s: String)`).
     // If both conversions succeed, return the result of adding the two numbers. Otherwise return .none
     // Use flatMap and/or map. Do not use the Swift's built-in `?.` chaining.
     func maybeAdd(_ first : String, _ second : String) -> Int? {
