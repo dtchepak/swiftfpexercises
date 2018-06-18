@@ -70,12 +70,12 @@ public func TODO<A>() -> Parser<A> { return Parser({ i in .ErrorResult(.Failed("
 
 // Produces a parser that always fails with UnexpectedChar given the specified character
 public func unexpectedCharParser<A>(_ c : Character) -> Parser<A> {
-    return Parser({ i in failWithUnexpectedChar(c) })
+    return Parser { i in failWithUnexpectedChar(c) }
 }
 
 // Return a parser that always succeeds with the given value and consumes no input.
 // Hint: Use `unexpectedCharParser` as a template for the answer (although rather than failing,
-//       it should succeed with the required value)
+//       it should succeed with the required value and pass along the input)
 public func valueParser<A>(_ a : A) -> Parser<A> {
     return TODO()
 }
