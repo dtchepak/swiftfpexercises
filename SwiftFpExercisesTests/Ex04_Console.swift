@@ -103,7 +103,7 @@ class Ex04_Console : XCTestCase {
         XCTAssert(out == ["What is your favourite colour?"], out.description);
     }
     
-    // Exercise 3: prompt the user to answer a question, then write the respnse to stdout.
+    // Exercise 3: prompt the user to answer a question, then write the response to stdout.
     // HINT: use `prompt`, and one of the combining functions (`flatMap`, `map`, or `then`)
     func testPromptAndWriteAnswerToConsole() {
         let io = TestIO()
